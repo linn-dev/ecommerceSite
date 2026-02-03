@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -39,7 +40,7 @@ model Address {
   city        String
   state       String
   zipCode     String
-  country     String  @default("USA")
+  country     String
   isDefault   Boolean @default(false)
   type        AddressType @default(SHIPPING)
 
