@@ -39,7 +39,7 @@ model Address {
   addressLine String
   city        String
   state       String
-  zipCode     String
+  zipCode     String?
   country     String
   isDefault   Boolean @default(false)
   type        AddressType @default(SHIPPING)
@@ -69,26 +69,45 @@ model Product {
   name          String
   slug          String   @unique
   description   String   @db.Text
-  price         Decimal  @db.Decimal(10, 2)
+  price         Decimal? @db.Decimal(10, 2)
   discountPrice Decimal? @db.Decimal(10, 2)
-  stock         Int
+  stock         Int?
   categoryId    Int
   category      Category @relation(fields: [categoryId], references: [id])
+  hasVariants   Boolean  @default(false)      // Does this product have variants?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
   images        ProductImage[]
+  variants      ProductVariant[]
   cartItems     CartItem[]
   orderItems    OrderItem[]
   reviews       Review[]
 }
 
 model ProductImage {
-  id        Int     @id @default(autoincrement())
-  productId Int
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  imageUrl  String
-  isPrimary Boolean @default(false)
+  id          Int     @id @default(autoincrement())
+  productId   Int
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  imageUrl    String
+  publicId    String  // Cloudinary public_id for deletion
+  isPrimary   Boolean @default(false)
+}
+
+model ProductVariant {
+  id          Int      @id @default(autoincrement())
+  productId   Int
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sku         String   @unique  // Stock Keeping Unit (unique identifier)
+  size        String?
+  color       String?
+  price       Decimal  @db.Decimal(10, 2)
+  stock       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
 }
 
 model Review {
@@ -102,7 +121,7 @@ model Review {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([productId, userId]) // One review per user per product
+  @@unique([productId, userId])
 }
 
 model Cart {
@@ -121,9 +140,11 @@ model CartItem {
   cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
   productId Int
   product   Product  @relation(fields: [productId], references: [id])
+  variantId Int?     // Optional: if product has variants
+  variant   ProductVariant? @relation(fields: [variantId], references: [id])
   quantity  Int      @default(1)
 
-  @@unique([cartId, productId])
+  @@unique([cartId, productId, variantId])
 }
 
 model Order {
@@ -167,8 +188,12 @@ model OrderItem {
   order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   productId Int
   product   Product  @relation(fields: [productId], references: [id])
+  variantId Int?     // Optional: which variant was purchased
+  variant   ProductVariant? @relation(fields: [variantId], references: [id])
   quantity  Int
-  price     Decimal  @db.Decimal(10, 2) // Price at time of purchase
+  price     Decimal  @db.Decimal(10, 2)
+  size      String?  // Store at time of purchase
+  color     String?  // Store at time of purchase
 }
 
 model Coupon {
