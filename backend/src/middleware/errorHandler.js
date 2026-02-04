@@ -1,4 +1,4 @@
-export const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res, next) => {
     console.error(err.stack);
 
     if(err.code === "P2002") {
@@ -20,3 +20,5 @@ export const errorHandler = (err, req, res, next) => {
         message: err.message || "Server Error"
     });
 }
+
+export default errorHandler;

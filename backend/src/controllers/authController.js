@@ -67,7 +67,7 @@ export const register = async(req, res, next) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
-            maxAge: 2 * 60 * 60 * 1000 // 2hr in millisecond
+            maxAge: 24 * 60 * 60 * 1000 // 24hr in millisecond
         });
 
         res.status(201).json({
@@ -124,7 +124,7 @@ export const login = async (req, res, next) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
-            maxAge: 2 * 60 * 60 * 1000
+            maxAge: 24 * 60 * 60 * 1000
         });
 
         //** Sent respond without password **\\
