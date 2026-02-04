@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
         isLoading,
         isAuthenticated: !!data?.user,
         refetchUser: refetch,
-        logout: logoutMutation.mutate(),
+        logout: () => logoutMutation.mutate(),
     }
 
     return (
