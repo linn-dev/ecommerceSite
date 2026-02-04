@@ -1,10 +1,10 @@
 import { createContext, useContext } from 'react';
-import { useCurrentUser, useLogout} from "../hooks/queries/useAuthQueries.js";
+import { useCurrentUser, useLogout } from '../hooks/queries/useAuthQueries';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const { data, isLoading, refetch } = useCurrentUser();
+    const { data, isLoading, error, refetch } = useCurrentUser();
     const logoutMutation = useLogout();
 
     const value = {
@@ -12,15 +12,19 @@ export const AuthProvider = ({ children }) => {
         isLoading,
         isAuthenticated: !!data?.user,
         refetchUser: refetch,
-        logout: () => logoutMutation.mutate(),
-    }
+        logout: () => {
+            if (data?.user) {
+                logoutMutation.mutate();
+            }
+        },
+    };
 
     return (
         <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
-    )
-}
+    );
+};
 
 export const useAuth = () => {
     const context = useContext(AuthContext);

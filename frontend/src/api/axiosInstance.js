@@ -8,13 +8,11 @@ const axiosInstance = axios.create({
     }
 });
 
-axiosInstance.interceptors.request.use(
-    (response) => response, // If success just return
+axiosInstance.interceptors.response.use(
+    (response) => response,
     (error) => {
-        if (error.response?.status === 401) {
-            // Token expired or invalid
-            // Clear user from AuthContext (we'll do this later)
-            // Redirect to login
+        if (error.response?.status === 401 && !window.location.pathname.includes('/login')) {
+            // Token expired or invalid - redirect to login only if not already on login page
             window.location.href = '/login';
         }
         return Promise.reject(error);

@@ -30,7 +30,6 @@ export const protect = async (req, res, next) => {
                 lastName: true,
                 role: true,
                 phone: true,
-                address: true,
             }
         });
 

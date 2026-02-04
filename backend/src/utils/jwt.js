@@ -15,6 +15,6 @@ export const verifyToken = (token) => {
             process.env.JWT_SECRET
         );
     }catch(err){
-        return err.message;
+        return null;
     }
 }

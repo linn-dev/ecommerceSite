@@ -8,6 +8,13 @@ export const useCurrentUser = () => {
         queryFn: getCurrentUser,
         retry: false,
         refetchOnWindowFocus: false,
+        staleTime: 5 * 60 * 1000, // 5 minutes
+        onError: (error) => {
+            // Only log errors that aren't 401s (expected when not logged in)
+            if (error.response?.status !== 401) {
+                console.error('Error fetching current user:', error);
+            }
+        }
     });
 }
 
@@ -18,7 +25,7 @@ export const useLogin = () => {
     return useMutation({
         mutationFn: loginUser,
         onSuccess: (data) => {
-            queryClient.setQueriesData(['user'], data);
+            queryClient.setQueryData(['user'], data);
             navigate('/');
         }
     })
@@ -31,7 +38,7 @@ export const useRegister = () => {
     return useMutation({
         mutationFn: registerUser,
         onSuccess: (data) => {
-            queryClient.setQueriesData(['user'], data);
+            queryClient.setQueryData(['user'], data);
             navigate('/');
         }
     })
@@ -43,8 +50,9 @@ export const useLogout = () => {
 
     return useMutation({
         mutationFn: logoutUser,
-        onSuccess: (data) => {
-            queryClient.setQueriesData(['user'], data);
+        onSuccess: () => {
+            queryClient.setQueryData(['user'], null);
+            queryClient.clear();
             navigate('/login');
         }
     });
