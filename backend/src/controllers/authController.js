@@ -10,7 +10,7 @@ export const register = async(req, res, next) => {
         const {email, password, firstName, lastName, phone} = req.body; // cookie-parser
 
         if(!email || !password || !firstName || !lastName || !phone){
-            res.status(400).json({
+            return res.status(400).json({
                 success: false,
                 message: "Please provide all required fields"
             })
@@ -88,7 +88,7 @@ export const login = async (req, res, next) => {
         const {email, password} = req.body;
 
         if(!email || !password){
-            res.status(400).json({
+            return res.status(400).json({
                 success: false,
                 message: "Please provide email and password"
             });
@@ -99,7 +99,7 @@ export const login = async (req, res, next) => {
         });
 
         if(!user) {
-            res.status(400).json({
+            return res.status(400).json({
                 success: false,
                 message: "Invalid credentials"
             });
@@ -108,7 +108,7 @@ export const login = async (req, res, next) => {
         const passwordValid = await bcrypt.compare(password, user.password);
 
         if(!passwordValid){
-            res.status(400).json({
+            return res.status(400).json({
                 success: false,
                 message: "Invalid credentials"
             });

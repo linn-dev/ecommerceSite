@@ -89,7 +89,7 @@ export const createCategory = async (req, res, next) => {
             where: {slug}
         });
 
-        if(!existingCategory) {
+        if(existingCategory) {
             return res.status(400).json({
                 success: false,
                 message: "Category already exists"

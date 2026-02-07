@@ -1,1 +1,37 @@
 @import "tailwindcss";
+
+.glass-button-style {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+    border-radius: 28px;
+    color: white;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background: transparent;
+
+    filter: drop-shadow(-8px -10px 46px rgba(0,0,0,0.37));
+    backdrop-filter: brightness(1.1) blur(2px) url(#displacementFilter);
+    -webkit-backdrop-filter: brightness(1.1) blur(2px) url(#displacementFilter);
+
+    transition: transform 0.2s ease;
+}
+
+.glass-button-style::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: 28px;
+    box-shadow: inset 6px 6px 0px -6px rgba(255, 255, 255, 0.7),
+    inset 0 0 8px 1px rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.15);
+    pointer-events: none
+}
+
+.glass-button-style:hover {
+    transform: scale(0.95);
+}

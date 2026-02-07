@@ -5,19 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ec9c74c6-ca70-4df6-8630-160070064e04" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/config/cloudinary.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/config/cloudinary.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/controllers/authController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/controllers/authController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/middleware/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/middleware/auth.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/utils/jwt.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/utils/jwt.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/controllers/categoryController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/controllers/categoryController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/middleware/errorHandler.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/middleware/errorHandler.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/api/authApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/authApi.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/api/axiosInstance.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/axiosInstance.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/common/Navbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/common/Navbar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/context/AuthContext.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/context/AuthContext.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/hooks/queries/useAuthQueries.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/hooks/queries/useAuthQueries.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/auth/LoginPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/auth/LoginPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/auth/RegisterPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/auth/RegisterPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/productApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/productApi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/hooks/queries/useProductQueries.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/hooks/queries/useProductQueries.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/products/ProductDetailPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/products/ProductDetailPage.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,11 +59,16 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.JavaScript&quot;,
     &quot;ts.external.directory.path&quot;: &quot;/home/linn-dev/.local/share/JetBrains/Toolbox/apps/webstorm/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/frontend/src/components/products" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -87,6 +90,9 @@
       <workItem from="1770171840468" duration="3409000" />
       <workItem from="1770176169995" duration="9308000" />
       <workItem from="1770188008597" duration="4907000" />
+      <workItem from="1770352988449" duration="8038000" />
+      <workItem from="1770434439510" duration="5061000" />
+      <workItem from="1770464717419" duration="15436000" />
     </task>
     <servers />
   </component>

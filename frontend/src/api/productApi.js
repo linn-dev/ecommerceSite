@@ -14,6 +14,11 @@ export const getProducts = async (params) => {
     return response.data;
 }
 
+export const getProduct = async (slug) => {
+    const response = await axiosInstance.get(`/products/${slug}`);
+    return response.data;
+}
+
 export const getCategories =async () => {
     const response = await axiosInstance.get('/categories');
     return response.data;

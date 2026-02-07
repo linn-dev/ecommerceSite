@@ -23,7 +23,7 @@ export const uploadToCloudinary = async (file, folder = "product") => {
 
         return {
             url: result.secure_url,
-            publicId: result.public_Id,
+            publicId: result.public_id,
         }
     }catch (err) {
         throw new Error(`Cloudinary upload failed: ${err.message}`);

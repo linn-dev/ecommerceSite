@@ -2,9 +2,10 @@ const errorHandler = (err, req, res, next) => {
     console.error(err.stack);
 
     if(err.code === "P2002") {
+        const field = err.meta?.target ? `field: ${err.meta.target}` : "record";
         return res.status(400).json({
             success: false,
-            message: "This record already exists"
+            message: `This record already exists (${field})`
         });
     }
 
