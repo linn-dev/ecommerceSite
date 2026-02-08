@@ -3,7 +3,6 @@ import React from 'react';
 const GlassButton = ({ children, onClick, className = "" }) => {
     return (
         <>
-            {/* SVG Filter ကို UI မှာ မမြင်ရအောင် သိမ်းထားပါမယ် */}
             <svg style={{ display: 'none' }}>
                 <filter id="displacementFilter">
                     <feTurbulence

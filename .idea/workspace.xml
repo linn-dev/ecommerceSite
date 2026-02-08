@@ -6,14 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ec9c74c6-ca70-4df6-8630-160070064e04" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/config/cloudinary.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/config/cloudinary.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/controllers/authController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/controllers/authController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/controllers/categoryController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/controllers/categoryController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/middleware/errorHandler.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/middleware/errorHandler.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/api/productApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/productApi.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/hooks/queries/useProductQueries.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/hooks/queries/useProductQueries.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/glasses/GlassButton.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/glasses/GlassButton.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/products/ProductDetailPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/products/ProductDetailPage.jsx" afterDir="false" />
     </list>
@@ -92,7 +85,8 @@
       <workItem from="1770188008597" duration="4907000" />
       <workItem from="1770352988449" duration="8038000" />
       <workItem from="1770434439510" duration="5061000" />
-      <workItem from="1770464717419" duration="15436000" />
+      <workItem from="1770464717419" duration="15518000" />
+      <workItem from="1770520890608" duration="4349000" />
     </task>
     <servers />
   </component>

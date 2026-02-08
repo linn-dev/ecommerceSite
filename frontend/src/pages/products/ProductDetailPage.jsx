@@ -48,6 +48,10 @@ export default function ProductDetailPage() {
     const currentStock = selectedVariant ? selectedVariant.stock : product.stock;
     const isOutOfStock = currentStock === 0;
 
+    const increaseQuantity = () => setQuantity(Math.min(currentStock, quantity + 1));
+
+    const decreaseQuantity = () => setQuantity(Math.max(1, quantity - 1));
+
     const handleAddToCart = () => {
         if (hasVariants) {
             if (sizes.length > 0 && !selectedSize) return alert('Please select a size');
@@ -65,9 +69,12 @@ export default function ProductDetailPage() {
     };
 
     return (
-        <div className="container mx-auto px-4 py-8 min-h-full">
+        <div className="relative container mx-auto px-4 py-8 min-h-full">
+            <GlassButton onClick={() => navigate(-1)} className="absolute! top-8 -left-8 p-2 w-8 h-8">
+                <i className="fa-solid fa-arrow-left text-sm"></i>
+            </GlassButton>
             <GlassCard>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="space-y-4">
                         <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
                             {product.images?.length > 0 ? (
@@ -155,23 +162,26 @@ export default function ProductDetailPage() {
                             </div>
                         )}
                         {/* Add to Cart Section */}
-                        <div className="flex gap-4 mb-8">
-                            <div className="w-24">
-                                <label className="sr-only">Quantity</label>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    max={currentStock}
-                                    value={quantity}
-                                    onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                                    className="w-full border border-gray-300 rounded-lg py-3 px-3 text-center"
-                                />
+                        <div className="flex items-center gap-4 my-4">
+                            <div className="w-30">
+                                <div className="flex items-center justify-between">
+                                    <GlassButton className="h-4 p-4" onClick={decreaseQuantity}>-</GlassButton>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max={currentStock}
+                                        value={quantity}
+                                        onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                                        className="w-full font-bold text-center border-none outline-none focus:ring-0 py-2 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    />
+                                    <GlassButton className="h-4 p-4" onClick={increaseQuantity}>+</GlassButton>
+                                </div>
                             </div>
 
                             <GlassButton
                                 onClick={handleAddToCart}
                                 disabled={isOutOfStock}
-
+                                className="px-8 py-4"
                             >
                                 {!isOutOfStock && <i className="fa-solid fa-basket-shopping me-2"></i>}
                                 <span>
@@ -200,8 +210,28 @@ export default function ProductDetailPage() {
                         </div>
                     </div>
                 </div>
-
             </GlassCard>
+            <div className="mt-16">
+                <h2 className="text-2xl font-bold mb-6 text-white">Customer Reviews</h2>
+                {product.reviews.length === 0 ? (
+                    <p className="text-white">No reviews yet.</p>
+                ) : (
+                    <div className="space-y-6">
+                        {product.reviews.map(review => (
+                            <div key={review.id} className="border-b pb-6">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <div className="font-bold">{review.user.firstName} {review.user.lastName}</div>
+                                    <span className="text-gray-400 text-sm">• {new Date(review.createdAt).toLocaleDateString()}</span>
+                                </div>
+                                <div className="flex text-yellow-500 text-sm mb-2">
+                                    {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                                </div>
+                                <p className="">{review.comment}</p>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
 
         /*<div className="container mx-auto px-4 py-8">
