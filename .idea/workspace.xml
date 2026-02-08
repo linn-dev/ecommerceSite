@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ec9c74c6-ca70-4df6-8630-160070064e04" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/glasses/GlassButton.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/glasses/GlassButton.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/products/ProductDetailPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/products/ProductDetailPage.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -86,7 +85,7 @@
       <workItem from="1770352988449" duration="8038000" />
       <workItem from="1770434439510" duration="5061000" />
       <workItem from="1770464717419" duration="15518000" />
-      <workItem from="1770520890608" duration="4349000" />
+      <workItem from="1770520890608" duration="5401000" />
     </task>
     <servers />
   </component>

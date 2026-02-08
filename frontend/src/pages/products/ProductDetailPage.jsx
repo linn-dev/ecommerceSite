@@ -181,7 +181,7 @@ export default function ProductDetailPage() {
                             <GlassButton
                                 onClick={handleAddToCart}
                                 disabled={isOutOfStock}
-                                className="px-8 py-4"
+                                className="px-4 md:px-8 py-4"
                             >
                                 {!isOutOfStock && <i className="fa-solid fa-basket-shopping me-2"></i>}
                                 <span>
