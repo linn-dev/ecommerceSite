@@ -233,37 +233,5 @@ export default function ProductDetailPage() {
                 )}
             </div>
         </div>
-
-        /*<div className="container mx-auto px-4 py-8">
-            <button onClick={() => navigate(-1)} className="mb-6 text-gray-600 hover:text-blue-600">
-                ← Back to Products
-            </button>
-
-                {/!* RIGHT: Product Info *!/}
-
-            </div>
-            {/!* Reviews Section *!/}
-            <div className="mt-16">
-                <h2 className="text-2xl font-bold mb-6">Customer Reviews</h2>
-                {product.reviews.length === 0 ? (
-                    <p className="text-gray-500">No reviews yet.</p>
-                ) : (
-                    <div className="space-y-6">
-                        {product.reviews.map(review => (
-                            <div key={review.id} className="border-b pb-6">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <div className="font-bold">{review.user.firstName} {review.user.lastName}</div>
-                                    <span className="text-gray-400 text-sm">• {new Date(review.createdAt).toLocaleDateString()}</span>
-                                </div>
-                                <div className="flex text-yellow-500 text-sm mb-2">
-                                    {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
-                                </div>
-                                <p className="text-gray-700">{review.comment}</p>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
-        </div>*/
     );
 }
