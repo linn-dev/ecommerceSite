@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom";
-import { getCategories, createProduct, deleteProduct} from "../../api/productApi.js";
+import { getCategories, createProduct, deleteProduct, updateProduct } from "../../api/productApi.js";
 
 export const useCreateProduct = () => {
     const queryClient = useQueryClient();
@@ -20,7 +20,25 @@ export const useCreateProduct = () => {
     })
 }
 
-export const useDeleteProduct = (id) => {
+export const useUpdateProduct = () => {
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+
+    return useMutation({
+        mutationFn: ({ id, data }) => updateProduct(id, data),
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['products'] });
+            queryClient.invalidateQueries({ queryKey: ['product', data.slug] });
+            navigate("/admin/products");
+        },
+        onError: (error) => {
+            console.error('Failed to update product:', error);
+            alert(error.response?.data?.message || "Failed to update product");
+        },
+    });
+};
+
+export const useDeleteProduct = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: deleteProduct,
@@ -28,6 +46,10 @@ export const useDeleteProduct = (id) => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['products'] });
         },
+        onError: (error) => {
+            console.error('Failed to delete product:', error);
+            alert(error.response?.data?.message || "Failed to delete product");
+        }
     });
 }
 

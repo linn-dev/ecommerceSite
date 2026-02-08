@@ -7,11 +7,12 @@ import RegisterPage from './pages/auth/RegisterPage';
 import ProductsPage from './pages/products/ProductsPage';
 import ProductDetailPage from './pages/products/ProductDetailPage';
 import ProfilePage from './pages/ProfilePage';
-import CreateProductPage from './pages/admin/CreateProductPage';
+import ProductFormPage from './pages/admin/ProductFormPage.jsx';
 
 import Navbar from './components/common/Navbar';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import AdminRoute from './components/common/AdminRoute';
+import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 
 export default function App() {
     return (
@@ -38,10 +39,28 @@ export default function App() {
                         />
 
                         <Route
+                            path="/admin/dashboard"
+                            element={
+                                <AdminRoute>
+                                    <AdminDashboard />
+                                </AdminRoute>
+                            }
+                        />
+
+                        <Route
                             path="/admin/products/create"
                             element={
                                 <AdminRoute>
-                                    <CreateProductPage />
+                                    <ProductFormPage />
+                                </AdminRoute>
+                            }
+                        />
+
+                        <Route
+                            path="/admin/products/edit/:slug"
+                            element={
+                                <AdminRoute>
+                                    <ProductFormPage />
                                 </AdminRoute>
                             }
                         />
