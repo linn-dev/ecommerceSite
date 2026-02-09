@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useProducts } from '../../hooks/queries/useProductQueries';
 import { useCategories } from '../../hooks/queries/useProductMutations';
 import ProductCard from '../../components/products/ProductCard';
+import GlassCard from "../../components/glasses/GlassCard.jsx";
 
 export default function ProductsPage() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -45,7 +46,7 @@ export default function ProductsPage() {
         setOrder(dir);
     };
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 text-white">
             <h1 className="text-3xl font-bold mb-8">All Products</h1>
             <div className="flex flex-col md:flex-row gap-8">
                 {/* SIDEBAR FILTERS */}
@@ -55,7 +56,7 @@ export default function ProductsPage() {
                         <input
                             type="text"
                             placeholder="Search products..."
-                            className="w-full border p-2 rounded"
+                            className="w-full border p-2 rounded text-white"
                             value={search}
                             onChange={(e) => {
                                 setSearchParams(prev => {
@@ -70,20 +71,23 @@ export default function ProductsPage() {
                     <div>
                         <h3 className="font-semibold mb-2">Categories</h3>
                         <div className="space-y-1">
-                            <button
-                                onClick={() => handleCategoryChange('')}
-                                className={`block w-full text-left px-2 py-1 rounded ${!category ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'}`}
-                            >
-                                All Categories
-                            </button>
-                            {categoriesData?.data?.map(cat => (
+                            <GlassCard className={`p-0! transition transform hover:scale-110 duration-300 ${!category ? 'bg-blue-400!' : ''}`}>
                                 <button
-                                    key={cat.id}
-                                    onClick={() => handleCategoryChange(cat.slug)}
-                                    className={`block w-full text-left px-2 py-1 rounded ${category === cat.slug ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'}`}
+                                    onClick={() => handleCategoryChange('')}
+                                    className={`block w-full text-left px-2 py-1 rounded`}
                                 >
-                                    {cat.name}
+                                    All Categories
                                 </button>
+                            </GlassCard>
+                            {categoriesData?.data?.map(cat => (
+                                <GlassCard key={cat.id} className={`p-0! transition transform duration-300 ${category === cat.slug ? 'scale-110 bg-blue-400!' : 'hover:scale-110'}`}>
+                                    <button
+                                        onClick={() => handleCategoryChange(cat.slug)}
+                                        className={`block w-full text-left px-2 py-1 rounded`}
+                                    >
+                                        {cat.name}
+                                    </button>
+                                </GlassCard>
                             ))}
                         </div>
                     </div>
@@ -94,14 +98,14 @@ export default function ProductsPage() {
                             <input
                                 type="number"
                                 placeholder="Min"
-                                className="w-full border p-2 rounded"
+                                className="w-full border p-2 rounded [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                 value={minPrice}
                                 onChange={(e) => setMinPrice(e.target.value)}
                             />
                             <input
                                 type="number"
                                 placeholder="Max"
-                                className="w-full border p-2 rounded"
+                                className="w-full border p-2 rounded [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                 value={maxPrice}
                                 onChange={(e) => setMaxPrice(e.target.value)}
                             />
@@ -112,16 +116,16 @@ export default function ProductsPage() {
                 <main className="flex-1">
                     {/* Sort Header */}
                     <div className="flex justify-between items-center mb-6">
-                        <p className="text-gray-500">
+                        <p className="">
                             Showing {data?.data?.length || 0} results
                         </p>
                         <select
                             onChange={handleSortChange}
-                            className="border p-2 rounded"
+                            className="bg-transparent border p-2 rounded outline-0"
                         >
-                            <option value="createdAt-desc">Newest First</option>
-                            <option value="price-asc">Price: Low to High</option>
-                            <option value="price-desc">Price: High to Low</option>
+                            <option value="createdAt-desc" className="bg-[#1a1a1a] text-white">Newest First</option>
+                            <option value="price-asc" className="bg-[#1a1a1a] text-white">Price: Low to High</option>
+                            <option value="price-desc" className="bg-[#1a1a1a] text-white">Price: High to Low</option>
                         </select>
                     </div>
                     {/* Product Grid */}
@@ -134,11 +138,11 @@ export default function ProductsPage() {
                     ) : isError ? (
                         <div className="text-red-500 text-center py-8">Failed to load products.</div>
                     ) : data?.data?.length === 0 ? (
-                        <div className="text-center py-12 text-gray-500">
-                            No products found matching your filters.
-                        </div>
+                        <GlassCard className="text-center py-12">
+                            No products found.
+                        </GlassCard>
                     ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                             {data.data.map(product => (
                                 <ProductCard key={product.id} product={product} />
                             ))}

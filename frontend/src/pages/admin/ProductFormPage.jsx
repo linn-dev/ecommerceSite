@@ -86,7 +86,7 @@ export default function ProductFormPage() {
                 alert("Please upload at least one image");
                 return;
             }
-            
+
             const submitData = new FormData();
             Object.keys(data).forEach(key => {
                 if (key === 'images') {

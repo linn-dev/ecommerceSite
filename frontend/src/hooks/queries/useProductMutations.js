@@ -29,7 +29,7 @@ export const useUpdateProduct = () => {
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['products'] });
             queryClient.invalidateQueries({ queryKey: ['product', data.slug] });
-            navigate("/admin/products");
+            navigate("/admin/dashboard");
         },
         onError: (error) => {
             console.error('Failed to update product:', error);
