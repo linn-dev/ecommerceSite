@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ec9c74c6-ca70-4df6-8630-160070064e04" name="Changes" comment="fix: sql is not support mode insensitive">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/server.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +85,7 @@
       <workItem from="1770464717419" duration="15518000" />
       <workItem from="1770520890608" duration="15776000" />
       <workItem from="1770604553901" duration="7050000" />
-      <workItem from="1770611735956" duration="16662000" />
+      <workItem from="1770611735956" duration="20678000" />
     </task>
     <task id="LOCAL-00001" summary="fix: sql is not support mode insensitive">
       <option name="closed" value="true" />
