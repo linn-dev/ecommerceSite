@@ -5,7 +5,7 @@ import { useAuth } from "./AuthContext.jsx"
 
 const CartContext = createContext(null);
 
-export default function CartProvider({ children }) {
+export function CartProvider({ children }) {
     const { user } = useAuth();
     const queryClient = useQueryClient();
 
