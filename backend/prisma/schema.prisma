@@ -160,6 +160,7 @@ model Order {
   total           Decimal     @db.Decimal(10, 2)
   status          OrderStatus @default(PENDING)
   paymentStatus   PaymentStatus @default(PENDING)
+  paymentMethod   PaymentMethod @default(COD)
   couponCode      String?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
@@ -180,6 +181,16 @@ enum PaymentStatus {
   PAID
   FAILED
   REFUNDED
+}
+
+enum PaymentMethod {
+  COD
+  UAB_PAY
+  KBZ_PAY
+  WAVE_PAY
+  VISA
+  MASTER_CARD
+  JCB
 }
 
 model OrderItem {
