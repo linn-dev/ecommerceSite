@@ -1,13 +1,19 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useProduct } from '../../hooks/queries/useProductQueries.js'
+import { useAddToCart } from '../../hooks/queries/useCardMutation.js';
+import { useAuth } from '../../context/AuthContext';
 
 import GlassCard from "../../components/glasses/GlassCard.jsx";
 import GlassButton from "../../components/glasses/GlassButton.jsx";
 
 export default function ProductDetailPage() {
     const { slug } = useParams();
+    const { user } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const { mutate: addToCartMutation, isPending: isAddingToCart } = useAddToCart();
 
     const { data, isLoading, isError } = useProduct(slug);
 
@@ -52,20 +58,34 @@ export default function ProductDetailPage() {
 
     const decreaseQuantity = () => setQuantity(Math.max(1, quantity - 1));
 
+
+
     const handleAddToCart = () => {
+        // Check if user is logged in
+        if (!user) {
+            navigate('/login', { state: { from: location.pathname } });
+            return;
+        }
+        // Validate variant selection
         if (hasVariants) {
             if (sizes.length > 0 && !selectedSize) return alert('Please select a size');
             if (colors.length > 0 && !selectedColor) return alert('Please select a color');
         }
-        const cartItem = {
-            productId: product.id,
-            variantId: selectedVariant?.id,
-            quantity,
-            price: currentPrice
-        };
-
-        console.log('Adding to cart:', cartItem);
-        alert('Added to cart! (Check console)');
+        addToCartMutation(
+            {
+                productId: product.id,
+                variantId: selectedVariant?.id || null,
+                quantity
+            },
+            {
+                onSuccess: () => {
+                    alert('Added to cart!');
+                },
+                onError: (error) => {
+                    alert(error.response?.data?.message || 'Failed to add to cart');
+                }
+            }
+        );
     };
 
     return (
@@ -180,13 +200,17 @@ export default function ProductDetailPage() {
 
                             <GlassButton
                                 onClick={handleAddToCart}
-                                disabled={isOutOfStock}
+                                disabled={isOutOfStock || isAddingToCart}
                                 className="px-4 md:px-8 py-4"
                             >
-                                {!isOutOfStock && <i className="fa-solid fa-basket-shopping me-2"></i>}
-                                <span>
-                                    {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
-                                </span>
+                                {isAddingToCart ? (
+                                    <span>Adding...</span>
+                                ) : (
+                                    <>
+                                        {!isOutOfStock && <i className="fa-solid fa-basket-shopping me-2"></i>}
+                                        <span>{isOutOfStock ? 'Out of Stock' : 'Add to Cart'}</span>
+                                    </>
+                                )}
                             </GlassButton>
                         </div>
                         {/* Additional Info */}
