@@ -106,13 +106,11 @@ export const addToCart = async (req, res, next) => {
             cart = await prisma.cart.create({ data: { userId } });
         }
 
-        const existingItem = await prisma.cartItem.findUnique({
+        const existingItem = await prisma.cartItem.findFirst({
             where: {
-                cartId_productId_variantId: {
-                    cartId: cart.id,
-                    productId: pId,
-                    variantId: vId,
-                }
+                cartId: cart.id,
+                productId: pId,
+                variantId: vId,
             }
         });
 
@@ -179,7 +177,7 @@ export const updateCartItem = async (req, res, next) => {
             include: {
                 cart: true,
                 product: true,
-                quantity: true
+                variant: true,
             }
         });
 
