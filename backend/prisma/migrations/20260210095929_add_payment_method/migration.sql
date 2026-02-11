@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Order` ADD COLUMN `paymentMethod` ENUM('COD', 'UAB_PAY', 'KBZ_PAY', 'WAVE_PAY', 'VISA', 'MASTER_CARD', 'JCB') NOT NULL DEFAULT 'COD';
