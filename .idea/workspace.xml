@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ec9c74c6-ca70-4df6-8630-160070064e04" name="Changes" comment="fix: sql is not support mode insensitive">
+    <list default="true" id="ec9c74c6-ca70-4df6-8630-160070064e04" name="Changes" comment="add(prisma): payment method column to order table">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -21,6 +21,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -43,13 +46,13 @@
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/linn-dev/Desktop/RDP2025/next-movies&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/linn-dev/Desktop/RDP2025/TraveJournal&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.JavaScript&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;swagger&quot;,
     &quot;ts.external.directory.path&quot;: &quot;/home/linn-dev/.local/share/JetBrains/Toolbox/apps/webstorm/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -85,7 +88,10 @@
       <workItem from="1770464717419" duration="15518000" />
       <workItem from="1770520890608" duration="15776000" />
       <workItem from="1770604553901" duration="7050000" />
-      <workItem from="1770611735956" duration="20678000" />
+      <workItem from="1770611735956" duration="22118000" />
+      <workItem from="1770691213102" duration="22850000" />
+      <workItem from="1770722810526" duration="82000" />
+      <workItem from="1770810431368" duration="4780000" />
     </task>
     <task id="LOCAL-00001" summary="fix: sql is not support mode insensitive">
       <option name="closed" value="true" />
@@ -95,7 +101,71 @@
       <option name="project" value="LOCAL" />
       <updated>1770612917795</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="fix(cart-controller): handle null variantId">
+      <option name="closed" value="true" />
+      <created>1770694235889</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1770694235889</updated>
+    </task>
+    <task id="LOCAL-00003" summary="fix: cart api cart removal logic">
+      <option name="closed" value="true" />
+      <created>1770696643395</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1770696643395</updated>
+    </task>
+    <task id="LOCAL-00004" summary="fix: cart context export default remove">
+      <option name="closed" value="true" />
+      <created>1770696694844</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1770696694844</updated>
+    </task>
+    <task id="LOCAL-00005" summary="feat: add handle add to cart">
+      <option name="closed" value="true" />
+      <created>1770696873986</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1770696873986</updated>
+    </task>
+    <task id="LOCAL-00006" summary="add: cart nav link">
+      <option name="closed" value="true" />
+      <created>1770713184609</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1770713184609</updated>
+    </task>
+    <task id="LOCAL-00007" summary="add: cart provider and route cart">
+      <option name="closed" value="true" />
+      <created>1770713251796</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1770713251796</updated>
+    </task>
+    <task id="LOCAL-00008" summary="add: cart items page ui">
+      <option name="closed" value="true" />
+      <created>1770713288976</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1770713288976</updated>
+    </task>
+    <task id="LOCAL-00009" summary="add(prisma): payment method column to order table">
+      <option name="closed" value="true" />
+      <created>1770717710416</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1770717710417</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -108,6 +178,14 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fix: create product page &amp;  name change to product form page" />
     <MESSAGE value="fix: sql is not support mode insensitive" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: sql is not support mode insensitive" />
+    <MESSAGE value="fix(cart-controller): handle null variantId" />
+    <MESSAGE value="fix: cart api cart removal logic" />
+    <MESSAGE value="fix: cart context export default remove" />
+    <MESSAGE value="feat: add handle add to cart" />
+    <MESSAGE value="add: cart nav link" />
+    <MESSAGE value="add: cart provider and route cart" />
+    <MESSAGE value="add: cart items page ui" />
+    <MESSAGE value="add(prisma): payment method column to order table" />
+    <option name="LAST_COMMIT_MESSAGE" value="add(prisma): payment method column to order table" />
   </component>
 </project>
