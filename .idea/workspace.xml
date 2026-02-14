@@ -91,7 +91,8 @@
       <workItem from="1770611735956" duration="22118000" />
       <workItem from="1770691213102" duration="22850000" />
       <workItem from="1770722810526" duration="82000" />
-      <workItem from="1770810431368" duration="4780000" />
+      <workItem from="1770810431368" duration="7360000" />
+      <workItem from="1771039422530" duration="939000" />
     </task>
     <task id="LOCAL-00001" summary="fix: sql is not support mode insensitive">
       <option name="closed" value="true" />
