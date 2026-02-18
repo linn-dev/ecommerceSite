@@ -58,8 +58,10 @@ export const createOrder = async (req, res, next) => {
                     throw new Error(`"${product.name}"${variant ? ` (${variant.size || ''})` : ''} only has ${availableStock} in stock`);
                 }
 
-            // Get price from DB
-            const price = variant ? parseFloat(variant.price) : parseFloat(product.price);
+                // Get price from DB
+                const price = variant ? parseFloat(variant.price) : parseFloat(product.price);
+
+                subtotal += price * item.quantity;
 
                 orderItems.push({
                     productId: product.id,
