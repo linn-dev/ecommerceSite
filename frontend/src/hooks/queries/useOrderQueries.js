@@ -4,7 +4,7 @@ import { getMyOrders, getOrder, getAllOrders } from "../../api/orderApi.js"
 export function useMyOrders(page = 1) {
     return useQuery({
         queryKey: ["orders", "my", page],
-        queryFn: getMyOrders({ page})
+        queryFn: () => getMyOrders({ page})
     })
 }
 
