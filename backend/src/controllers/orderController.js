@@ -3,7 +3,6 @@ import prisma from "../config/database.js";
 // @desc Create order from cart
 // @route POST api/orders
 // @access Private
-
 export const createOrder = async (req, res, next) => {
     try {
         const userId = req.user.id;
@@ -46,89 +45,62 @@ export const createOrder = async (req, res, next) => {
             });
         }
 
-        // Validate stock and calculate prices from DB
-        const orderItems = [];
-        const stockUpdates = [];
+        const order = await prisma.$transaction(async (tx) => {
+            const orderItems = [];
+            let subtotal = 0;
 
-        for (const item of cart.items) {
-            const product = item.product;
-            const variant = item.variant;
+            for (const item of cart.items) {
+                const product = item.product;
+                const variant = item.variant;
+                const availableStock = variant ? variant.stock : product.stock;
 
-            // Check stock
-            const availableStock = variant ? variant.stock : product.stock;
-
-            if (item.quantity > availableStock) {
-                return res.status(400).json({
-                    success: false,
-                    message: `"${product.name}"${variant ? ` (${variant.size || ''} ${variant.color || ''})` : ''} only has ${availableStock} in stock`
-                });
-            }
+                if(item.quantity > availableStock) {
+                    throw new Error(`"${product.name}"${variant ? ` (${variant.size || ''})` : ''} only has ${availableStock} in stock`);
+                }
 
             // Get price from DB
             const price = variant ? parseFloat(variant.price) : parseFloat(product.price);
 
-            orderItems.push({
-                productId: product.id,
-                variantId: variant?.id || null,
-                quantity: item.quantity,
-                price,
-                size: variant?.size || null,
-                color: variant?.color || null
-            });
+                orderItems.push({
+                    productId: product.id,
+                    variantId: variant?.id || null,
+                    quantity: item.quantity,
+                    price,
+                    size: variant?.size || null,
+                    color: variant?.color || null
+                });
 
-            // Prepare stock deduction
-            if (variant) {
-                stockUpdates.push(
-                    prisma.productVariant.update({
+                // Prepare stock deduction
+                if (variant) {
+                    await tx.productVariant.update({
                         where: { id: variant.id },
                         data: { stock: { decrement: item.quantity } }
-                    })
-                );
-            } else {
-                stockUpdates.push(
-                    prisma.product.update({
+                    });
+                } else {
+                    await tx.product.update({
                         where: { id: product.id },
                         data: { stock: { decrement: item.quantity } }
-                    })
-                );
+                    });
+                }
             }
-        }
 
-        // Calculate totals
-        const subtotal = orderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        const tax = 0;
-        const shippingCost = 0;
-        const total = subtotal + tax + shippingCost;
-        // Create order in transaction
-        const order = await prisma.$transaction(async (tx) => {
-            // 1. Create order
+            const total = subtotal;
+
             const newOrder = await tx.order.create({
                 data: {
                     userId,
                     shippingAddressId: parseInt(shippingAddressId),
-                    subtotal,
-                    tax,
-                    shippingCost,
-                    total,
+                    subtotal, tax: 0, shippingCost: 0, total,
                     paymentMethod,
-                    status: 'PENDING',
-                    paymentStatus: paymentMethod === 'COD' ? 'PENDING' : 'PENDING',
-                    items: {
-                        create: orderItems
-                    }
+                    items: { create: orderItems }
                 }
             });
 
-            // 2. Deduct stock
-            for (const update of stockUpdates) {
-                await update;
-            }
+            await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
 
-            // 3. Clear cart
-            await tx.cartItem.deleteMany({
-                where: { cartId: cart.id }
-            });
             return newOrder;
+        }, {
+            timeout: 10000
         });
 
         // Fetch complete order
@@ -157,6 +129,9 @@ export const createOrder = async (req, res, next) => {
             data: completeOrder
         });
     }catch(err) {
+        if (err.message.includes('stock')) {
+            return res.status(400).json({ success: false, message: err.message });
+        }
         next(err);
     }
 }
