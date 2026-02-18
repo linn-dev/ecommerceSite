@@ -53,15 +53,18 @@ export const createAddress = async (req, res, next) => {
         });
 
         const address = await prisma.address.create({
-            fullName,
-            phone,
-            addressLine,
-            city,
-            state,
-            zipCode: zipCode || null,
-            country,
-            type: type || 'SHIPPING',
-            isDefault: isDefault || existingCount === 0
+            data: {
+                userId: req.user.id,
+                fullName,
+                phone,
+                addressLine,
+                city,
+                state,
+                zipCode: zipCode || null,
+                country,
+                type: type || 'SHIPPING',
+                isDefault: isDefault || existingCount === 0
+            }
         });
 
          return res.status(201).json({
