@@ -2,19 +2,23 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from './context/cartContext';
 
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/auth/LoginPage';
-import RegisterPage from './pages/auth/RegisterPage';
-import ProductsPage from './pages/products/ProductsPage';
-import ProductDetailPage from './pages/products/ProductDetailPage';
-import ProfilePage from './pages/ProfilePage';
-import ProductFormPage from './pages/admin/ProductFormPage.jsx';
-
-import Navbar from './components/common/Navbar';
-import ProtectedRoute from './components/common/ProtectedRoute';
-import AdminRoute from './components/common/AdminRoute';
+import AdminOrdersPage from './pages/admin/AdminOrdersPage';
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import CartPage from './pages/cart/CartPage';
+import CheckoutPage from './pages/checkout/CheckoutPage';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/auth/LoginPage';
+import OrdersPage from './pages/orders/OrdersPage';
+import OrderDetailPage from './pages/orders/OrderDetailPage';
+import ProductsPage from './pages/products/ProductsPage';
+import ProductFormPage from './pages/admin/ProductFormPage.jsx';
+import ProductDetailPage from './pages/products/ProductDetailPage';
+import ProfilePage from './pages/ProfilePage';
+import RegisterPage from './pages/auth/RegisterPage';
+
+import AdminRoute from './components/common/AdminRoute';
+import ProtectedRoute from './components/common/ProtectedRoute';
+import Navbar from './components/common/Navbar';
 
 export default function App() {
     return (
@@ -74,6 +78,42 @@ export default function App() {
                                     <ProtectedRoute>
                                         <CartPage />
                                     </ProtectedRoute>
+                                }
+                            />
+
+                            <Route
+                                path="/checkout"
+                                element={
+                                    <ProtectedRoute>
+                                        <CheckoutPage />
+                                    </ProtectedRoute>
+                                }
+                            />
+
+                            <Route
+                                path="/orders"
+                                element={
+                                    <ProtectedRoute>
+                                        <OrdersPage />
+                                    </ProtectedRoute>
+                                }
+                            />
+
+                            <Route
+                                path="/orders/:id"
+                                element={
+                                    <ProtectedRoute>
+                                        <OrderDetailPage />
+                                    </ProtectedRoute>
+                                }
+                            />
+
+                            <Route
+                                path="/admin/orders"
+                                element={
+                                    <AdminRoute>
+                                        <AdminOrdersPage />
+                                    </AdminRoute>
                                 }
                             />
 
