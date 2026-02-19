@@ -24,8 +24,12 @@ export const getCategories =async () => {
     return response.data;
 }
 
-export const updateProduct = async (id, data) => {
-    const response = await axiosInstance.put(`/products/${id}`, data);
+export const updateProduct = async (id, formData) => {
+    const response = await axiosInstance.put(`/products/${id}`, formData, {
+        headers: {
+            'Content-Type': undefined,
+        },
+    });
     return response.data;
 };
 

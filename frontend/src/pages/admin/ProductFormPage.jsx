@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useDropzone } from 'react-dropzone';
 import { useParams } from 'react-router-dom';
@@ -10,16 +10,16 @@ import GlassButton from "../../components/glasses/GlassButton.jsx";
 export default function ProductFormPage() {
     const { slug } = useParams();
     const isEditMode = !!slug;
-
     const { data: productData, isLoading: isProductLoading } = useProduct(slug);
     const product = productData?.data;
-
     const { mutate: createProduct, isPending: isCreating } = useCreateProduct();
     const { mutate: updateProduct, isPending: isUpdating } = useUpdateProduct();
     const isPending = isCreating || isUpdating;
-
     const { data: categoriesData } = useCategories();
 
+    // Track existing images (from DB) and which ones to delete
+    const [existingImages, setExistingImages] = useState([]);
+    const [deletedImageIds, setDeletedImageIds] = useState([]);
     const { register, control, handleSubmit, watch, setValue, setError, reset, formState: { errors } } = useForm({
         defaultValues: {
             name: '',
@@ -52,11 +52,29 @@ export default function ProductFormPage() {
                 price: product.price || '',
                 stock: product.stock || '',
                 images: [],
-                variants: product.variants?.length ? product.variants : [{ sku: '', size: '', color: '', price: '', stock: '' }]
+                variants: product.variants?.length
+                    ? product.variants.map(v => ({
+                        id: v.id,
+                        sku: v.sku,
+                        size: v.size || '',
+                        color: v.color || '',
+                        price: v.price,
+                        stock: v.stock
+                    }))
+                    : [{ sku: '', size: '', color: '', price: '', stock: '' }]
             });
+
+            // Set existing images from DB
+            setExistingImages(product.images || []);
+            setDeletedImageIds([]);
         }
     }, [isEditMode, product, reset]);
 
+    // Handle deleting an existing image
+    const handleDeleteExistingImage = (imageId) => {
+        setDeletedImageIds(prev => [...prev, imageId]);
+        setExistingImages(prev => prev.filter(img => img.id !== imageId));
+    };
     // Dropzone Handling
     const onDrop = useCallback((acceptedFiles) => {
         const filesWithPreview = acceptedFiles.map(file =>
@@ -72,32 +90,40 @@ export default function ProductFormPage() {
     });
 
     const onSubmit = (data) => {
+        const submitData = new FormData();
+        // Basic fields
+        submitData.append('name', data.name);
+        submitData.append('description', data.description);
+        submitData.append('categoryId', data.categoryId);
+        submitData.append('hasVariants', data.hasVariants);
+        if (!data.hasVariants) {
+            submitData.append('price', data.price);
+            submitData.append('stock', data.stock);
+        }
+        // Variants
+        if (data.hasVariants && data.variants?.length > 0) {
+            submitData.append('variants', JSON.stringify(data.variants));
+        }
+        // New images
+        if (data.images?.length > 0) {
+            data.images.forEach(img => submitData.append('images', img));
+        }
         if (isEditMode) {
-            const updateData = {
-                name: data.name,
-                description: data.description,
-                categoryId: data.categoryId,
-                price: data.price,
-                stock: data.stock,
-            };
-            updateProduct({ id: product.id, data: updateData });
+            // Include deleted image IDs
+            if (deletedImageIds.length > 0) {
+                submitData.append('deletedImageIds', JSON.stringify(deletedImageIds));
+            }
+            updateProduct({ id: product.id, data: submitData }, {
+                onError: (error) => {
+                    const message = error.response?.data?.message || "Failed to update product";
+                    alert(message);
+                }
+            });
         } else {
             if (data.images.length === 0) {
                 alert("Please upload at least one image");
                 return;
             }
-
-            const submitData = new FormData();
-            Object.keys(data).forEach(key => {
-                if (key === 'images') {
-                    data.images.forEach(img => submitData.append('images', img));
-                } else if (key === 'variants') {
-                    if (data.hasVariants) submitData.append('variants', JSON.stringify(data.variants));
-                } else {
-                    submitData.append(key, data[key]);
-                }
-            });
-
             createProduct(submitData, {
                 onError: (error) => {
                     const message = error.response?.data?.message || "Failed to create product";
@@ -155,16 +181,57 @@ export default function ProductFormPage() {
                     {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
                 </div>
 
-                {/* Image Dropzone */}
-                {!isEditMode && (
-                    <div>
-                        <label className="block text-sm font-medium mb-2">Product Images</label>
-                        <div {...getRootProps()} className="border-2 border-dashed p-6 text-center cursor-pointer rounded-lg">
-                            <input {...getInputProps()} />
-                            <p className="text-white">{isDragActive ? "Drop here..." : "Drag & drop images here, or click to select"}</p>
+                {/* ─── Images Section (Always visible) ─── */}
+                <div>
+                    <label className="block text-sm font-medium mb-2">Product Images</label>
+                    {/* Existing Images (edit mode only) */}
+                    {isEditMode && existingImages.length > 0 && (
+                        <div className="mb-4">
+                            <p className="text-xs text-gray-400 mb-2">Current Images</p>
+                            <div className="flex flex-wrap gap-4">
+                                {existingImages.map((img, index) => (
+                                    <div key={img.id} className="relative group">
+                                        <img
+                                            src={img.imageUrl}
+                                            alt={`Product ${index + 1}`}
+                                            className="w-32 h-32 object-cover rounded-lg border shadow-sm"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => handleDeleteExistingImage(img.id)}
+                                            className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full text-sm flex items-center justify-center hover:bg-red-600 shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+                                        >
+                                            ✕
+                                        </button>
+                                        {img.isPrimary && (
+                                            <span className="absolute bottom-0 left-0 right-0 bg-blue-600 text-white text-[10px] text-center py-0.5 rounded-b-lg opacity-90">
+                                                Primary
+                                            </span>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                        {currentImages.length > 0 && (
-                            <div className="flex flex-wrap gap-4 mt-4">
+                    )}
+
+                    {/* Dropzone for new images */}
+                    <div {...getRootProps()} className="border-2 border-dashed p-6 text-center cursor-pointer rounded-lg">
+                        <input {...getInputProps()} />
+                        <p className="text-white">
+                            {isDragActive
+                                ? "Drop here..."
+                                : isEditMode
+                                    ? "Drag & drop new images here, or click to select"
+                                    : "Drag & drop images here, or click to select"
+                            }
+                        </p>
+                    </div>
+
+                    {/* New image previews */}
+                    {currentImages.length > 0 && (
+                        <div className="mt-4">
+                            {isEditMode && <p className="text-xs text-gray-400 mb-2">New Images</p>}
+                            <div className="flex flex-wrap gap-4">
                                 {currentImages.map((image, index) => (
                                     <div key={index} className="relative group">
                                         <img
@@ -184,28 +251,29 @@ export default function ProductFormPage() {
                                         >
                                             ✕
                                         </button>
-                                        {index === 0 && (
+                                        {!isEditMode && index === 0 && (
                                             <span className="absolute bottom-0 left-0 right-0 bg-blue-600 text-white text-[10px] text-center py-0.5 rounded-b-lg opacity-90">
-                                            Primary
-                                        </span>
+                                                Primary
+                                            </span>
                                         )}
                                     </div>
                                 ))}
                             </div>
-                        )}
-                    </div>
-                )}
+                        </div>
+                    )}
+                </div>
 
                 {/* Dynamic Variants Section */}
                 <div className="flex items-center gap-2">
                     <input type="checkbox" {...register("hasVariants")} id="hasVariants" className="h-4 w-4 text-blue-600 rounded" />
                     <label htmlFor="hasVariants" className="font-medium">This product has variants</label>
                 </div>
-
                 {hasVariants ? (
                     <GlassCard className="">
                         {fields.map((field, index) => (
                             <div key={field.id} className="flex flex-wrap gap-2 items-end mb-4 pb-4 border-b-2 border-gray-200/40 border-dashed">
+                                {/* Hidden ID field for existing variants */}
+                                <input type="hidden" {...register(`variants.${index}.id`)} />
                                 <div className="flex-1 min-w-30">
                                     <label className="text-xs font-semibold uppercase">Product code (or) SKU</label>
                                     <input {...register(`variants.${index}.sku`, { required: true })} placeholder="Product code (or) SKU" className="border p-2 w-full rounded outline-none focus:border-gray-300" />

@@ -28,7 +28,7 @@ export const useUpdateProduct = () => {
         mutationFn: ({ id, data }) => updateProduct(id, data),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['products'] });
-            queryClient.invalidateQueries({ queryKey: ['product', data.slug] });
+            queryClient.invalidateQueries({ queryKey: ['product', data.data?.slug] });
             navigate("/admin/dashboard");
         },
         onError: (error) => {
