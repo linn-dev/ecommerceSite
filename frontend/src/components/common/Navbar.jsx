@@ -5,7 +5,7 @@ import GlassCard from "../glasses/GlassCard.jsx";
 
 
 export default function Navbar() {
-    const { user, isAuthenticated, logout, isLoading } = useAuth();
+    const { user, isAuthenticated, isLoading } = useAuth();
     const { cartCount } = useCart();
 
     return (
@@ -26,6 +26,9 @@ export default function Navbar() {
                             <Link to="/products" className="hover:text-blue-600">
                                 Products
                             </Link>
+                            <Link to="/" className="hover:text-blue-600">
+                                Help & Support
+                            </Link>
                             {user && (
                                 <Link to="/cart" className="relative">
                                     <i className="fa-solid fa-cart-shopping text-xl"></i>
@@ -44,15 +47,10 @@ export default function Navbar() {
                                 <span className="text-gray-500">Loading...</span>
                             ) : isAuthenticated ? (
                                 <>
-                                    <Link to="/profile" className="hover:text-blue-600">
+                                    <Link to="/profile" className="hover:text-blue-400">
+                                        <i className="fa-light fa-user mr-2 text-xl"></i>
                                         {user.firstName} {user.lastName}
                                     </Link>
-                                    <button
-                                        onClick={logout}
-                                        className="px-4 py-2 text-red-600 hover:text-red-700"
-                                    >
-                                        Logout
-                                    </button>
                                 </>
                             ) : (
                                 <>
