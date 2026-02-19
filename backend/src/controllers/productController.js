@@ -393,11 +393,18 @@ export const updateProduct = async (req, res, next) => {
             price,
             discountPrice,
             stock,
-            categoryId
+            categoryId,
+            hasVariants,
+            variants,         // JSON string of variants array
+            deletedImageIds   // JSON string of image IDs to delete
         } = req.body;
 
         const product = await prisma.product.findUnique({
-            where: { id: parseInt(id) }
+            where: { id: parseInt(id) },
+            include: {
+                variants: true,
+                images: true
+            }
         });
 
         if (!product) {
@@ -413,19 +420,134 @@ export const updateProduct = async (req, res, next) => {
             slug = name.toLowerCase()
                 .replace(/[^a-z0-9]+/g, '-')
                 .replace(/(^-|-$)/g, '');
+            // Check slug uniqueness (excluding current product)
+            const slugExists = await prisma.product.findFirst({
+                where: {
+                    slug,
+                    id: { not: parseInt(id) }
+                }
+            });
+            if (slugExists) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'A product with this name already exists'
+                });
+            }
         }
 
-        // Update product
+        const useVariants = hasVariants === 'true' || hasVariants === true;
+        // ─── Handle Image Deletions ───
+        if (deletedImageIds) {
+            const idsToDelete = JSON.parse(deletedImageIds);
+            if (idsToDelete.length > 0) {
+                // Find images to delete
+                const imagesToDelete = await prisma.productImage.findMany({
+                    where: {
+                        id: { in: idsToDelete.map(i => parseInt(i)) },
+                        productId: parseInt(id)
+                    }
+                });
+                // Delete from Cloudinary
+                for (const img of imagesToDelete) {
+                    await deleteFromCloudinary(img.publicId);
+                }
+                // Delete from DB
+                await prisma.productImage.deleteMany({
+                    where: {
+                        id: { in: idsToDelete.map(i => parseInt(i)) }
+                    }
+                });
+            }
+        }
+
+        // ─── Handle New Image Uploads ───
+        if (req.files && req.files.length > 0) {
+            // Check if product has any remaining images to determine isPrimary
+            const remainingImages = await prisma.productImage.count({
+                where: { productId: parseInt(id) }
+            });
+            const uploadedImages = [];
+            for (const file of req.files) {
+                const result = await uploadToCloudinary(file, 'products');
+                uploadedImages.push({
+                    productId: parseInt(id),
+                    imageUrl: result.url,
+                    publicId: result.publicId,
+                    isPrimary: remainingImages === 0 && uploadedImages.length === 0 // First image is primary if no existing
+                });
+                fs.unlinkSync(file.path);
+            }
+            if (uploadedImages.length > 0) {
+                await prisma.productImage.createMany({
+                    data: uploadedImages
+                });
+            }
+        }
+
+        // ─── Handle Variant Updates (Smart Update) ───
+        if (useVariants && variants) {
+            const variantsData = JSON.parse(variants);
+            const existingVariantIds = product.variants.map(v => v.id);
+            const submittedIds = variantsData.filter(v => v.id).map(v => parseInt(v.id));
+            // 1. Delete variants that were removed from the form
+            const idsToDelete = existingVariantIds.filter(id => !submittedIds.includes(id));
+            if (idsToDelete.length > 0) {
+                await prisma.productVariant.deleteMany({
+                    where: {
+                        id: { in: idsToDelete },
+                        productId: parseInt(id)
+                    }
+                });
+            }
+
+            // 2. Update existing variants & create new ones
+            for (const v of variantsData) {
+                if (v.id && existingVariantIds.includes(parseInt(v.id))) {
+                    // Update existing
+                    await prisma.productVariant.update({
+                        where: { id: parseInt(v.id) },
+                        data: {
+                            sku: v.sku,
+                            size: v.size || null,
+                            color: v.color || null,
+                            price: parseFloat(v.price),
+                            stock: parseInt(v.stock)
+                        }
+                    });
+                } else {
+                    // Create new
+                    await prisma.productVariant.create({
+                        data: {
+                            productId: parseInt(id),
+                            sku: v.sku,
+                            size: v.size || null,
+                            color: v.color || null,
+                            price: parseFloat(v.price),
+                            stock: parseInt(v.stock)
+                        }
+                    });
+                }
+            }
+        } else if (useVariants === false && product.hasVariants) {
+            // Switched FROM variants TO no-variants: delete all variants
+            await prisma.productVariant.deleteMany({
+                where: { productId: parseInt(id) }
+            });
+        }
+
+        // ─── Update Product ───
         const updatedProduct = await prisma.product.update({
             where: { id: parseInt(id) },
             data: {
                 ...(name && { name, slug }),
                 ...(description && { description }),
-                ...(price && { price: parseFloat(price) }),
+                hasVariants: useVariants,
+                ...(!useVariants && price ? { price: parseFloat(price) } : {}),
+                ...(!useVariants && stock ? { stock: parseInt(stock) } : {}),
+                ...(useVariants ? { price: null, stock: null } : {}),
                 ...(discountPrice !== undefined && {
                     discountPrice: discountPrice ? parseFloat(discountPrice) : null
                 }),
-                ...(stock && { stock: parseInt(stock) }),
                 ...(categoryId && { categoryId: parseInt(categoryId) })
             },
             include: {
@@ -442,6 +564,14 @@ export const updateProduct = async (req, res, next) => {
         });
 
     } catch (error) {
+        // Clean up uploaded files on error
+        if (req.files && req.files.length > 0) {
+            for (const file of req.files) {
+                if (fs.existsSync(file.path)) {
+                    fs.unlinkSync(file.path);
+                }
+            }
+        }
         next(error);
     }
 };

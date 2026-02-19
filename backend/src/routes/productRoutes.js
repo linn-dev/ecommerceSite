@@ -17,7 +17,7 @@ router.get('/:identifier', getProduct);
 
 // Admin routes
 router.post('/', protect, adminOnly, upload.array('images', 5), createProduct);
-router.put('/:id', protect, adminOnly, updateProduct);
+router.put('/:id', protect, adminOnly, upload.array('images', 5), updateProduct);
 router.delete('/:id', protect, adminOnly, deleteProduct);
 
 export default router;
