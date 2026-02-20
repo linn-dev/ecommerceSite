@@ -146,6 +146,7 @@ export const updateCategory = async (req, res, next) => {
         });
 
         if(!category) {
+            if (req.file) fs.unlinkSync(req.file.path);
             return res.status(404).json({
                 success: false,
                 message: "Category Not Found"
@@ -168,12 +169,11 @@ export const updateCategory = async (req, res, next) => {
                 const publicId = urlParts.slice(-2).join('/').split('.')[0];
                 await deleteFromCloudinary(publicId);
             }
+            const result = await uploadToCloudinary(req.file, 'categories');
+            imageUrl = result.url;
+
+            fs.unlinkSync(req.file.path);
         }
-
-        const result = await uploadToCloudinary(req.file, 'categories');
-        imageUrl = result.url;
-
-        fs.unlinkSync(req.file.path);
 
         //** Update category **\\
         const updatedCategory = await prisma.category.update({
