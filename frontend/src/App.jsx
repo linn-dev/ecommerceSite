@@ -4,6 +4,7 @@ import { CartProvider } from './context/cartContext';
 
 import AdminOrdersPage from './pages/admin/AdminOrdersPage';
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+import AdminCategoriesPage from './pages/admin/AdminCategoriesPage.jsx';
 import CartPage from './pages/cart/CartPage';
 import CheckoutPage from './pages/checkout/CheckoutPage';
 import HomePage from './pages/HomePage';
@@ -61,6 +62,15 @@ export default function App() {
                                 element={
                                     <AdminRoute>
                                         <ProductFormPage />
+                                    </AdminRoute>
+                                }
+                            />
+
+                            <Route
+                                path="/admin/categories"
+                                element={
+                                    <AdminRoute>
+                                        <AdminCategoriesPage />
                                     </AdminRoute>
                                 }
                             />

@@ -33,18 +33,32 @@ export default function AdminProductsPage() {
                 </Link>
             </div>
 
-            <GlassCard>
-                <Link to="/admin/orders" className="flex items-center justify-between group">
-                    <div className="flex items-center gap-3">
-                        <i className="fa-solid fa-chart-diagram text-xl text-blue-400"></i>
-                        <div>
-                            <h2 className="text-lg font-bold">Order Details</h2>
-                            <p className="text-sm text-gray-400">View admin order details</p>
+            <div className="flex flex-col md:flex-row items-center mb-6 gap-4">
+                <GlassCard className="flex-1 w-full">
+                    <Link to="/admin/orders" className="flex items-center justify-between group">
+                        <div className="flex items-center gap-3">
+                            <i className="fa-solid fa-chart-diagram text-xl text-blue-400"></i>
+                            <div>
+                                <h2 className="text-lg font-bold">Order Management</h2>
+                                <p className="text-sm text-gray-400">View admin order management</p>
+                            </div>
                         </div>
-                    </div>
-                    <i className="fa-solid fa-chevron-right text-gray-400 group-hover:text-white transition-colors"></i>
-                </Link>
-            </GlassCard>
+                        <i className="fa-solid fa-chevron-right text-gray-400 group-hover:text-white transition-colors"></i>
+                    </Link>
+                </GlassCard>
+                <GlassCard className="flex-1 w-full">
+                    <Link to="/admin/categories" className="flex items-center justify-between group">
+                        <div className="flex items-center gap-3">
+                            <i className="fa-solid fa-list text-xl text-blue-400"></i>
+                            <div>
+                                <h2 className="text-lg font-bold">Categories Management</h2>
+                                <p className="text-sm text-gray-400">View admin categories management</p>
+                            </div>
+                        </div>
+                        <i className="fa-solid fa-chevron-right text-gray-400 group-hover:text-white transition-colors"></i>
+                    </Link>
+                </GlassCard>
+            </div>
 
             <GlassCard className="mt-4 p-0! overflow-x-auto">
                 <table className="w-full text-sm">
