@@ -1,6 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useProducts } from '../../hooks/queries/useProductQueries';
 import { useDeleteProduct } from '../../hooks/queries/useProductMutations';
+import GlassButton from "../../components/glasses/GlassButton.jsx";
+import GlassCard from "../../components/glasses/GlassCard.jsx";
 
 export default function AdminProductsPage() {
     // Fetch all products (pagination disabled for simplicity, or handle it)
@@ -24,26 +26,40 @@ export default function AdminProductsPage() {
                 <h1 className="text-2xl font-bold">Admin Dashboard</h1>
                 <Link
                     to="/admin/products/create"
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                 >
-                    + Add New Product
+                    <GlassButton className="px-4 py-2">
+                        + Add New Product
+                    </GlassButton>
                 </Link>
             </div>
 
-            <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+            <GlassCard>
+                <Link to="/admin/orders" className="flex items-center justify-between group">
+                    <div className="flex items-center gap-3">
+                        <i className="fa-solid fa-chart-diagram text-xl text-blue-400"></i>
+                        <div>
+                            <h2 className="text-lg font-bold">Order Details</h2>
+                            <p className="text-sm text-gray-400">View admin order details</p>
+                        </div>
+                    </div>
+                    <i className="fa-solid fa-chevron-right text-gray-400 group-hover:text-white transition-colors"></i>
+                </Link>
+            </GlassCard>
+
+            <GlassCard className="mt-4 p-0! overflow-x-auto">
+                <table className="w-full text-sm">
+                    <thead>
                     <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Product</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Category</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Price</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Stock</th>
+                        <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">Actions</th>
                     </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody>
                     {data?.data?.map((product) => (
-                        <tr key={product.id} className="hover:bg-gray-300">
+                        <tr key={product.id} className="border-b border-gray-700 hover:bg-white/5 cursor-pointer">
                             <td className="px-6 py-4 max-w-130 whitespace-nowrap overflow-hidden cursor-pointer" onClick={() => navigate(`/products/${product.slug}`)}>
                                 <div className="flex items-center">
                                     <div className="h-10 w-10 shrink-0">
@@ -54,16 +70,18 @@ export default function AdminProductsPage() {
                                         )}
                                     </div>
                                     <div className="ml-4">
-                                        <div className="text-sm font-medium text-gray-900">{product.name}</div>
-                                        <div className="text-sm text-gray-500">ID: {product.id}</div>
+                                        <div className="text-sm font-medium">{product.name}</div>
+                                        <div className="text-sm text-gray-400">ID: {product.id}</div>
                                     </div>
                                 </div>
                             </td>
 
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {product.category?.name}
+                            <td className="px-6 py-4 whitespace-nowrap">
+                                <span className="px-2 py-1 rounded-full text-sm font-medium bg-green-500/20 text-green-400">
+                                    {product.category?.name}
+                                </span>
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 {product.hasVariants && product.priceRange.min !== product.priceRange.max ? (
                                     <span>
                                         {product.priceRange.min.toLocaleString()} - {product.priceRange.max.toLocaleString()} MMK
@@ -72,19 +90,19 @@ export default function AdminProductsPage() {
                                     <span>{product.priceRange.min?.toLocaleString()} MMK</span>
                                 )}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm">
                                 {product.totalStock}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <Link
                                     to={`/admin/products/edit/${product.slug}`}
-                                    className="text-indigo-600 hover:text-indigo-900 mr-4"
+                                    className="px-4 py-1 mr-4 rounded-full text-sm font-medium bg-blue-500/20 text-blue-400"
                                 >
                                     Edit
                                 </Link>
                                 <button
                                     onClick={() => handleDelete(product.id)}
-                                    className="text-red-600 hover:text-red-900"
+                                    className="px-2 py-1 rounded-full text-sm font-medium bg-red-500/20 text-red-500"
                                 >
                                     Delete
                                 </button>
@@ -93,7 +111,7 @@ export default function AdminProductsPage() {
                     ))}
                     </tbody>
                 </table>
-            </div>
+            </GlassCard>
         </div>
     );
 }
