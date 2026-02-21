@@ -4,6 +4,43 @@ Small full-stack e-commerce example built with a React (Vite) frontend and an Ex
 
 ![status](https://img.shields.io/badge/status-active-brightgreen)
 
+<!-- Screenshot: replace with a real screenshot at docs/screenshot.png or .svg -->
+- Home Page
+![Screenshot](docs/home-page-1.png)
+![Screenshot](docs/home-page-2.png)
+
+
+- Products Page
+![Screenshot](docs/products-page.png)
+
+
+- Product Detail Page
+![Screenshot](docs/product-details.png)
+
+
+- Checkout Page
+![Screenshot](docs/checkout-page.png)
+
+
+- Ordered Page
+![Screenshot](docs/ordered-page.png)
+
+
+- My Orders Page
+![Screenshot](docs/my-order.png)
+
+
+- Profile Page
+  ![Screenshot](docs/profile-page.png)
+
+
+- Admin Dashboard Page
+  ![Screenshot](docs/admin-dashboard-page.png)
+
+
+- Admin Order Management Page
+  ![Screenshot](docs/admin-order-management.png)
+
 <!-- Tech badges -->
 ![React](https://img.shields.io/badge/React-19.2.0-61DAFB?logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-7.2.4-646CFF?logo=vite&logoColor=white)
@@ -39,6 +76,21 @@ Small full-stack e-commerce example built with a React (Vite) frontend and an Ex
 - Backend: Node.js (ESM), Express, Prisma (MySQL), Cloudinary, Multer
 
 ---
+
+## Planned / Future Features
+
+The project is intended to evolve; planned improvements and features include:
+
+- Product reviews and ratings (user reviews with moderation)
+- Coupon & discount system (promo codes, min purchase rules, expiry)
+- Admin/product analytics & sales reports
+- Multi-currency & payment gateways (VISA, MasterCard, region-specific providers)
+- Inventory tracking & low-stock alerts
+- Role-based access control & audit logs
+- Product recommendations / search improvements (fuzzy search, facets)
+- Webhooks and integrations (email, SMS, payment callbacks)
+
+If you'd like help implementing any of these, tell me which to prioritise and I can scaffold it.
 
 ## Getting started
 
