@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ec9c74c6-ca70-4df6-8630-160070064e04" name="Changes" comment="fix: getMyOrders function in useMyOrders query">
+    <list default="true" id="ec9c74c6-ca70-4df6-8630-160070064e04" name="Changes" comment="feat: add infinity scroll animation style">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/ProfilePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/ProfilePage.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,7 +23,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -69,7 +65,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-WS-253.30387.83" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-WS-253.31033.133" />
       </set>
     </attachedChunks>
   </component>
@@ -98,7 +94,10 @@
       <workItem from="1770810431368" duration="7360000" />
       <workItem from="1771039422530" duration="7911000" />
       <workItem from="1771382619113" duration="1005000" />
-      <workItem from="1771383826367" duration="22939000" />
+      <workItem from="1771383826367" duration="26333000" />
+      <workItem from="1771468590469" duration="26417000" />
+      <workItem from="1771554842726" duration="11563000" />
+      <workItem from="1771641241703" duration="2754000" />
     </task>
     <task id="LOCAL-00001" summary="fix: sql is not support mode insensitive">
       <option name="closed" value="true" />
@@ -284,7 +283,95 @@
       <option name="project" value="LOCAL" />
       <updated>1771409980598</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="add: pages routes add in app.jsx address &amp; order">
+      <option name="closed" value="true" />
+      <created>1771410517025</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1771410517025</updated>
+    </task>
+    <task id="LOCAL-00025" summary="fix: update image products controller &amp; route">
+      <option name="closed" value="true" />
+      <created>1771471561150</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1771471561150</updated>
+    </task>
+    <task id="LOCAL-00026" summary="feat: refactor product form with image preview cleanup and formatting">
+      <option name="closed" value="true" />
+      <created>1771472403251</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1771472403251</updated>
+    </task>
+    <task id="LOCAL-00027" summary="fix: logout button move to profile page">
+      <option name="closed" value="true" />
+      <created>1771485187634</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1771485187634</updated>
+    </task>
+    <task id="LOCAL-00028" summary="feat: add user info, my orders link, address details and admin dashboard in profile page">
+      <option name="closed" value="true" />
+      <created>1771485265138</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1771485265138</updated>
+    </task>
+    <task id="LOCAL-00029" summary="feat(db): add is active and is instock to product table column">
+      <option name="closed" value="true" />
+      <created>1771490635997</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1771490635997</updated>
+    </task>
+    <task id="LOCAL-00030" summary="fix: crash when updating category without image in category controller">
+      <option name="closed" value="true" />
+      <created>1771575380298</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1771575380298</updated>
+    </task>
+    <task id="LOCAL-00031" summary="fix: refactor validation show error ui">
+      <option name="closed" value="true" />
+      <created>1771643751722</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1771643751722</updated>
+    </task>
+    <task id="LOCAL-00032" summary="fix: refactor change admin's products table ui">
+      <option name="closed" value="true" />
+      <created>1771643819971</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1771643819971</updated>
+    </task>
+    <task id="LOCAL-00033" summary="feat: add footer, home page, and routes in App.jsx">
+      <option name="closed" value="true" />
+      <created>1771643896579</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1771643896579</updated>
+    </task>
+    <task id="LOCAL-00034" summary="feat: add infinity scroll animation style">
+      <option name="closed" value="true" />
+      <created>1771643954954</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1771643954954</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -295,15 +382,6 @@
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.prisma" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix: create product page &amp;  name change to product form page" />
-    <MESSAGE value="fix: sql is not support mode insensitive" />
-    <MESSAGE value="fix(cart-controller): handle null variantId" />
-    <MESSAGE value="fix: cart api cart removal logic" />
-    <MESSAGE value="fix: cart context export default remove" />
-    <MESSAGE value="feat: add handle add to cart" />
-    <MESSAGE value="add: cart nav link" />
-    <MESSAGE value="add: cart provider and route cart" />
-    <MESSAGE value="add: cart items page ui" />
     <MESSAGE value="add(prisma): payment method column to order table" />
     <MESSAGE value="fix: add .js extension to addressRoutes import" />
     <MESSAGE value="feat(address): implement addressApi and useAddresses hooks" />
@@ -318,6 +396,17 @@
     <MESSAGE value="feat(order): add orders page &amp; order detail page" />
     <MESSAGE value="feat(order): add orders page for admin" />
     <MESSAGE value="fix: getMyOrders function in useMyOrders query" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: getMyOrders function in useMyOrders query" />
+    <MESSAGE value="add: pages routes add in app.jsx address &amp; order" />
+    <MESSAGE value="fix: update image products controller &amp; route" />
+    <MESSAGE value="feat: refactor product form with image preview cleanup and formatting" />
+    <MESSAGE value="fix: logout button move to profile page" />
+    <MESSAGE value="feat: add user info, my orders link, address details and admin dashboard in profile page" />
+    <MESSAGE value="feat(db): add is active and is instock to product table column" />
+    <MESSAGE value="fix: crash when updating category without image in category controller" />
+    <MESSAGE value="fix: refactor validation show error ui" />
+    <MESSAGE value="fix: refactor change admin's products table ui" />
+    <MESSAGE value="feat: add footer, home page, and routes in App.jsx" />
+    <MESSAGE value="feat: add infinity scroll animation style" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: add infinity scroll animation style" />
   </component>
 </project>
