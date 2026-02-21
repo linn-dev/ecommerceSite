@@ -20,7 +20,7 @@ export default function ProductFormPage() {
     // Track existing images (from DB) and which ones to delete
     const [existingImages, setExistingImages] = useState([]);
     const [deletedImageIds, setDeletedImageIds] = useState([]);
-    const { register, control, handleSubmit, watch, setValue, setError, reset, formState: { errors } } = useForm({
+    const { register, control, handleSubmit, watch, setValue, setError, reset, formState: { errors, isSubmitted } } = useForm({
         defaultValues: {
             name: '',
             description: '',
@@ -160,13 +160,14 @@ export default function ProductFormPage() {
                     <label className="block text-sm font-medium mb-2">Category</label>
                     <select
                         {...register("categoryId", { required: "Please select a category" })}
-                        className="w-full p-2 border border-gray-300 rounded"
+                        className={`w-full p-2 border rounded bg-transparent ${errors.categoryId ? 'border-red-500' : 'border-gray-300'}`}
                     >
                         <option value="">Select Category</option>
                         {categoriesData?.data?.map(cat => (
                             <option key={cat.id} value={cat.id} className="bg-blue-900">{cat.name}</option>
                         ))}
                     </select>
+                    {errors.categoryId && <p className="text-red-500 text-sm mt-2">{errors.categoryId.message}</p>}
                 </div>
 
                 {/* Description */}
@@ -276,7 +277,7 @@ export default function ProductFormPage() {
                                 <input type="hidden" {...register(`variants.${index}.id`)} />
                                 <div className="flex-1 min-w-30">
                                     <label className="text-xs font-semibold uppercase">Product code (or) SKU</label>
-                                    <input {...register(`variants.${index}.sku`, { required: true })} placeholder="Product code (or) SKU" className="border p-2 w-full rounded outline-none focus:border-gray-300" />
+                                    <input {...register(`variants.${index}.sku`, { required: true })} placeholder="Product code (or) SKU" className={`border p-2 w-full rounded outline-none ${errors?.variants?.[index]?.sku ? 'border-red-500' : 'focus:border-gray-300'}` } />
                                 </div>
                                 <div className="w-18">
                                     <label className="text-xs font-semibold uppercase">Size</label>
@@ -288,18 +289,18 @@ export default function ProductFormPage() {
                                 </div>
                                 <div className="w-28">
                                     <label className="text-xs font-semibold uppercase">Price</label>
-                                    <input {...register(`variants.${index}.price`, { required: true })} type="number" placeholder="MMK" className="border p-2 w-full rounded outline-none focus:border-gray-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                                    <input {...register(`variants.${index}.price`, { required: true })} type="number" placeholder="MMK" className={`border p-2 w-full rounded outline-none ${errors.variants?.[index]?.price ? 'border-red-500' : 'focus:border-gray-300'} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`} />
                                 </div>
                                 <div className="w-24">
                                     <label className="text-xs font-semibold uppercase">Stock</label>
-                                    <input {...register(`variants.${index}.stock`, { required: true })} type="number" placeholder="0" className="border p-2 w-full rounded outline-none focus:border-gray-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                                    <input {...register(`variants.${index}.stock`, { required: true })} type="number" placeholder="0" className={`border p-2 w-full rounded outline-none ${errors.variants?.[index]?.stock ? 'border-red-500' : 'focus:border-gray-300'} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`} />
                                 </div>
                                 <GlassButton type="button" onClick={() => remove(index)} className="text-red-700! p-2">✕</GlassButton>
                             </div>
                         ))}
                         <GlassButton
                             type="button"
-                            onClick={() => append({ sku: '', size: '', color: '', price: '', stock: '' })}
+                            onClick={() => append({ sku: '', size: '', color: '', price: '', stock: '' }, { shouldValidate: false })}
                             className="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center gap-1 py-2 px-4"
                         >
                             <span>+</span> Add Variant
@@ -309,12 +310,13 @@ export default function ProductFormPage() {
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium mb-2">Price</label>
-                            <input {...register("price", { required: !hasVariants })} type="number" placeholder="MMK" className="border p-2 w-full rounded outline-none focus:border-gray-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
-                            {errors.price && <p className="text-red-500 text-sm mt-2">{errors.price.message}</p>}
+                            <input {...register("price", { required: !hasVariants ? "Price is required" : false })} type="number" placeholder="MMK" className={`border p-2 w-full rounded outline-none ${isSubmitted && errors.price ? 'border-red-500 focus:border-red-500' : 'focus:border-gray-300'} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`} />
+                            {isSubmitted && errors.price && <p className="text-red-500 text-sm mt-2">{errors.price.message}</p>}
                         </div>
                         <div>
                             <label className="block text-sm font-medium mb-2">Stock</label>
-                            <input {...register("stock", { required: !hasVariants })} type="number" placeholder="0" className="border p-2 w-full rounded outline-none focus:border-gray-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                            <input {...register("stock", { required: !hasVariants ? "Stock is required" : false })} type="number" placeholder="0" className={`border p-2 w-full rounded outline-none ${isSubmitted && errors.stock ? 'border-red-500 focus:border-red-500' : 'focus:border-gray-300'} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`} />
+                            {isSubmitted && errors.stock && <p className="text-red-500 text-sm mt-2">{errors.stock.message}</p>}
                         </div>
                     </div>
                 )}
