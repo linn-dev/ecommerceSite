@@ -34,3 +34,22 @@
 .glass-button-style:hover {
     transform: scale(0.95);
 }
+
+.animate-scroll {
+    display: flex;
+    width: max-content; /* Content အရှည်အတိုင်း ယူမယ် */
+    animation: scroll-infinite 30s linear infinite;
+}
+
+.animate-scroll:hover {
+    animation-play-state: paused;
+}
+
+@keyframes scroll-infinite {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
