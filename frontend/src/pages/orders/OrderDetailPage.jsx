@@ -65,7 +65,10 @@ export default function OrderDetailPage() {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="relative container mx-auto px-4 py-8">
+            <GlassButton onClick={() => navigate(-1)} className="absolute! top-8 -left-8 p-2 w-8 h-8">
+                <i className="fa-solid fa-arrow-left text-sm"></i>
+            </GlassButton>
             {/* Success Banner */}
             {justPlaced && (
                 <GlassCard className="mb-6 border-green-500/30!">
