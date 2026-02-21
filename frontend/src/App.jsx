@@ -19,16 +19,18 @@ import RegisterPage from './pages/auth/RegisterPage';
 import AdminRoute from './components/common/AdminRoute';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import Navbar from './components/common/Navbar';
+import Footer from './components/common/Footer';
 
 export default function App() {
     return (
         <BrowserRouter>
             <AuthProvider>
                 <CartProvider>
-                    <div className="min-h-screen bg-linear-to-br from-slate-900 via-blue-900 to-slate-900">
+                    <div className="min-h-screen bg-linear-to-br from-slate-900 via-blue-900 to-slate-900 flex flex-col">
                         <Navbar />
 
-                        <Routes>
+                        <main className="flex-1">
+                            <Routes>
                             {/* Public routes */}
                             <Route path="/" element={<HomePage />} />
                             <Route path="/login" element={<LoginPage />} />
@@ -118,7 +120,9 @@ export default function App() {
                             />
 
                             <Route path="*" element={<div>Page Not Found</div>} />
-                        </Routes>
+                            </Routes>
+                        </main>
+                        <Footer />
                     </div>
                 </CartProvider>
             </AuthProvider>
