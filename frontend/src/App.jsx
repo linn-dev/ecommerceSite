@@ -21,10 +21,12 @@ import AdminRoute from './components/common/AdminRoute';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
+import ScrollToTop from "./components/common/ScrollToTop.jsx";
 
 export default function App() {
     return (
         <BrowserRouter>
+            <ScrollToTop />
             <AuthProvider>
                 <CartProvider>
                     <div className="min-h-screen bg-linear-to-br from-slate-900 via-blue-900 to-slate-900 flex flex-col">
