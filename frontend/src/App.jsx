@@ -5,6 +5,8 @@ import { CartProvider } from './context/cartContext';
 import AdminOrdersPage from './pages/admin/AdminOrdersPage';
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import AdminCategoriesPage from './pages/admin/AdminCategoriesPage.jsx';
+import AdminCouponsPage from './pages/admin/AdminCouponsPage.jsx';
+import CouponsPage from './pages/coupons/CouponsPage.jsx';
 import CartPage from './pages/cart/CartPage';
 import CheckoutPage from './pages/checkout/CheckoutPage';
 import HomePage from './pages/HomePage';
@@ -40,6 +42,7 @@ export default function App() {
                             <Route path="/register" element={<RegisterPage />} />
                             <Route path="/products" element={<ProductsPage />} />
                             <Route path="/products/:slug" element={<ProductDetailPage />} />
+                            <Route path="/coupons" element={<CouponsPage />} />
 
                             <Route
                                 path="/profile"
@@ -127,6 +130,15 @@ export default function App() {
                                 element={
                                     <AdminRoute>
                                         <AdminOrdersPage />
+                                    </AdminRoute>
+                                }
+                            />
+
+                            <Route
+                                path="/admin/coupons"
+                                element={
+                                    <AdminRoute>
+                                        <AdminCouponsPage />
                                     </AdminRoute>
                                 }
                             />
