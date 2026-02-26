@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useProduct } from '../../hooks/queries/useProductQueries.js'
 import { useAddToCart } from '../../hooks/queries/useCardMutation.js';
+import { useCreateReview, useUpdateReview, useDeleteReview } from '../../hooks/queries/useReviewMutation.js';
 import { useAuth } from '../../context/AuthContext';
 
 import GlassCard from "../../components/glasses/GlassCard.jsx";
@@ -14,6 +15,9 @@ export default function ProductDetailPage() {
     const location = useLocation();
 
     const { mutate: addToCartMutation, isPending: isAddingToCart } = useAddToCart();
+    const { mutate: submitReview, isPending: isSubmitting } = useCreateReview();
+    const { mutate: editReview, isPending: isEditing } = useUpdateReview();
+    const { mutate: removeReview, isPending: isDeleting } = useDeleteReview();
 
     const { data, isLoading, isError } = useProduct(slug);
 
@@ -21,6 +25,12 @@ export default function ProductDetailPage() {
     const [selectedSize, setSelectedSize] = useState('');
     const [selectedColor, setSelectedColor] = useState('');
     const [quantity, setQuantity] = useState(1);
+
+    // Review state
+    const [reviewRating, setReviewRating] = useState(0);
+    const [reviewComment, setReviewComment] = useState('');
+    const [hoverRating, setHoverRating] = useState(0);
+    const [editingReviewId, setEditingReviewId] = useState(null);
 
     const product = data?.data;
 
@@ -55,18 +65,19 @@ export default function ProductDetailPage() {
     const isOutOfStock = currentStock === 0;
 
     const increaseQuantity = () => setQuantity(Math.min(currentStock, quantity + 1));
-
     const decreaseQuantity = () => setQuantity(Math.max(1, quantity - 1));
 
+    // Check if current user already reviewed this product
+    const existingReview = user
+        ? product.reviews.find(r => r.user.id === user.id)
+        : null;
 
-
+    // ─── Cart Handler ───
     const handleAddToCart = () => {
-        // Check if user is logged in
         if (!user) {
             navigate('/login', { state: { from: location.pathname } });
             return;
         }
-        // Validate variant selection
         if (hasVariants) {
             if (sizes.length > 0 && !selectedSize) return alert('Please select a size');
             if (colors.length > 0 && !selectedColor) return alert('Please select a color');
@@ -78,15 +89,87 @@ export default function ProductDetailPage() {
                 quantity
             },
             {
-                onSuccess: () => {
-                    alert('Added to cart!');
-                },
-                onError: (error) => {
-                    alert(error.response?.data?.message || 'Failed to add to cart');
-                }
+                onSuccess: () => alert('Added to cart!'),
+                onError: (error) => alert(error.response?.data?.message || 'Failed to add to cart')
             }
         );
     };
+
+    // ─── Review Handlers ───
+    const handleSubmitReview = () => {
+        if (reviewRating < 1 || reviewRating > 5) {
+            return alert('Please select a rating (1-5 stars)');
+        }
+        submitReview(
+            { productId: product.id, rating: reviewRating, comment: reviewComment || null },
+            {
+                onSuccess: () => {
+                    setReviewRating(0);
+                    setReviewComment('');
+                },
+                onError: (err) => alert(err.response?.data?.message || 'Failed to submit review')
+            }
+        );
+    };
+
+    const startEditingReview = (review) => {
+        setEditingReviewId(review.id);
+        setReviewRating(review.rating);
+        setReviewComment(review.comment || '');
+    };
+
+    const cancelEditingReview = () => {
+        setEditingReviewId(null);
+        setReviewRating(0);
+        setReviewComment('');
+    };
+
+    const handleUpdateReview = () => {
+        if (reviewRating < 1 || reviewRating > 5) {
+            return alert('Please select a rating (1-5 stars)');
+        }
+        editReview(
+            { id: editingReviewId, rating: reviewRating, comment: reviewComment || null },
+            {
+                onSuccess: () => cancelEditingReview(),
+                onError: (err) => alert(err.response?.data?.message || 'Failed to update review')
+            }
+        );
+    };
+
+    const handleDeleteReview = (id) => {
+        if (!window.confirm('Are you sure you want to delete this review?')) return;
+        removeReview(id, {
+            onError: (err) => alert(err.response?.data?.message || 'Failed to delete review')
+        });
+    };
+
+    // ─── Star Picker Component ───
+    const StarPicker = ({ size = 'text-3xl' }) => (
+        <div className="flex gap-1">
+            {[1, 2, 3, 4, 5].map(star => (
+                <button
+                    key={star}
+                    type="button"
+                    onClick={() => setReviewRating(star)}
+                    onMouseEnter={() => setHoverRating(star)}
+                    onMouseLeave={() => setHoverRating(0)}
+                    className={`${size} transition-colors`}
+                >
+                    <span className={
+                        star <= (hoverRating || reviewRating)
+                            ? 'text-yellow-400'
+                            : 'text-gray-500'
+                    }>★</span>
+                </button>
+            ))}
+            {reviewRating > 0 && (
+                <span className="text-sm text-gray-400 ml-2 self-center">
+                    {reviewRating}/5
+                </span>
+            )}
+        </div>
+    );
 
     return (
         <div className="relative container mx-auto px-4 py-8 min-h-full">
@@ -235,24 +318,162 @@ export default function ProductDetailPage() {
                     </div>
                 </div>
             </GlassCard>
+
+            {/* ═══════════════════════════════════════ */}
+            {/*  Reviews Section                       */}
+            {/* ═══════════════════════════════════════ */}
             <div className="mt-16">
                 <h2 className="text-2xl font-bold mb-6 text-white">Customer Reviews</h2>
+
+                {/* ─── Review Form (logged in + no existing review + not editing) ─── */}
+                {user && !existingReview && !editingReviewId && (
+                    <GlassCard className="mb-8">
+                        <h3 className="font-bold text-lg mb-4">Write a Review</h3>
+
+                        {/* Star Picker */}
+                        <div className="mb-4">
+                            <label className="block text-sm text-gray-400 mb-2">Your Rating</label>
+                            <StarPicker />
+                        </div>
+
+                        {/* Comment */}
+                        <div className="mb-4">
+                            <label className="block text-sm text-gray-400 mb-2">Your Comment (optional)</label>
+                            <textarea
+                                value={reviewComment}
+                                onChange={(e) => setReviewComment(e.target.value)}
+                                rows={3}
+                                placeholder="Share your thoughts about this product..."
+                                className="w-full p-3 bg-white/5 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 resize-none"
+                            />
+                        </div>
+
+                        <GlassButton
+                            onClick={handleSubmitReview}
+                            disabled={isSubmitting || reviewRating === 0}
+                            className="px-6 py-2"
+                        >
+                            {isSubmitting ? 'Submitting...' : 'Submit Review'}
+                        </GlassButton>
+                    </GlassCard>
+                )}
+
+                {/* Not logged in prompt */}
+                {!user && (
+                    <GlassCard className="mb-8 text-center">
+                        <p className="text-gray-400 mb-3">Log in to write a review</p>
+                        <GlassButton
+                            onClick={() => navigate('/login', { state: { from: location.pathname } })}
+                            className="px-6 py-2"
+                        >
+                            Log In
+                        </GlassButton>
+                    </GlassCard>
+                )}
+
+                {/* ─── Reviews List ─── */}
                 {product.reviews.length === 0 ? (
-                    <p className="text-white">No reviews yet.</p>
+                    <p className="text-gray-400">No reviews yet. Be the first to review!</p>
                 ) : (
-                    <div className="space-y-6">
-                        {product.reviews.map(review => (
-                            <div key={review.id} className="border-b pb-6">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <div className="font-bold">{review.user.firstName} {review.user.lastName}</div>
-                                    <span className="text-gray-400 text-sm">• {new Date(review.createdAt).toLocaleDateString()}</span>
-                                </div>
-                                <div className="flex text-yellow-500 text-sm mb-2">
-                                    {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
-                                </div>
-                                <p className="">{review.comment}</p>
-                            </div>
-                        ))}
+                    <div className="space-y-4">
+                        {product.reviews.map(review => {
+                            const isOwner = user && review.user.id === user.id;
+                            const isAdmin = user?.role === 'ADMIN';
+                            const isEditingThis = editingReviewId === review.id;
+
+                            return (
+                                <GlassCard key={review.id} className={isEditingThis ? 'border border-blue-500!' : ''}>
+                                    {isEditingThis ? (
+                                        /* ─── Inline Edit Mode ─── */
+                                        <div>
+                                            <h3 className="text-sm font-semibold text-blue-400 mb-3">
+                                                Editing Your Review
+                                            </h3>
+
+                                            {/* Star Picker */}
+                                            <div className="mb-4">
+                                                <StarPicker />
+                                            </div>
+
+                                            {/* Comment */}
+                                            <textarea
+                                                value={reviewComment}
+                                                onChange={(e) => setReviewComment(e.target.value)}
+                                                rows={3}
+                                                className="w-full p-3 bg-white/5 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 resize-none mb-4"
+                                            />
+
+                                            <div className="flex gap-3">
+                                                <GlassButton
+                                                    onClick={handleUpdateReview}
+                                                    disabled={isEditing || reviewRating === 0}
+                                                    className="px-6 py-2"
+                                                >
+                                                    {isEditing ? 'Saving...' : 'Save Changes'}
+                                                </GlassButton>
+                                                <button
+                                                    onClick={cancelEditingReview}
+                                                    className="text-gray-400 hover:text-white px-4 py-2"
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        /* ─── View Mode ─── */
+                                        <div>
+                                            <div className="flex items-center justify-between mb-2">
+                                                <div className="flex items-center gap-3">
+                                                    {/* User Avatar */}
+                                                    <div className="w-9 h-9 bg-blue-500/20 rounded-full flex items-center justify-center text-sm font-bold text-blue-400">
+                                                        {review.user.firstName?.[0]}{review.user.lastName?.[0]}
+                                                    </div>
+                                                    <div>
+                                                        <span className="font-semibold">
+                                                            {review.user.firstName} {review.user.lastName}
+                                                        </span>
+                                                        <span className="text-gray-500 text-sm ml-2">
+                                                            {new Date(review.createdAt).toLocaleDateString()}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                {/* Action Buttons */}
+                                                {(isOwner || isAdmin) && (
+                                                    <div className="flex gap-2">
+                                                        {isOwner && (
+                                                            <button
+                                                                onClick={() => startEditingReview(review)}
+                                                                className="text-xs text-yellow-400 hover:text-yellow-300 px-2 py-1 border border-yellow-500/30 rounded"
+                                                            >
+                                                                Edit
+                                                            </button>
+                                                        )}
+                                                        <button
+                                                            onClick={() => handleDeleteReview(review.id)}
+                                                            disabled={isDeleting}
+                                                            className="text-xs text-red-400 hover:text-red-300 px-2 py-1 border border-red-500/30 rounded"
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* Stars */}
+                                            <div className="flex text-yellow-400 text-sm mb-2">
+                                                {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                                            </div>
+
+                                            {/* Comment */}
+                                            {review.comment && (
+                                                <p className="text-gray-300">{review.comment}</p>
+                                            )}
+                                        </div>
+                                    )}
+                                </GlassCard>
+                            );
+                        })}
                     </div>
                 )}
             </div>
