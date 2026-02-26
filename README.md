@@ -81,8 +81,6 @@ Small full-stack e-commerce example built with a React (Vite) frontend and an Ex
 
 The project is intended to evolve; planned improvements and features include:
 
-- Product reviews and ratings (user reviews with moderation)
-- Coupon & discount system (promo codes, min purchase rules, expiry)
 - Admin/product analytics & sales reports
 - Multi-currency & payment gateways (VISA, MasterCard, region-specific providers)
 - Inventory tracking & low-stock alerts
