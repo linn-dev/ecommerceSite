@@ -1,4 +1,5 @@
 import prisma from "../config/database.js";
+import { calculateDiscount, validateCouponData } from './couponController.js';
 
 // @desc Create order from cart
 // @route POST api/orders
@@ -6,7 +7,7 @@ import prisma from "../config/database.js";
 export const createOrder = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        const { shippingAddressId, paymentMethod = "COD" } = req.body;
+        const { shippingAddressId, paymentMethod = "COD", couponCode } = req.body;
 
         if(!shippingAddressId) {
             return res.status(400).json({
@@ -43,6 +44,30 @@ export const createOrder = async (req, res, next) => {
                 success: false,
                 message: "Your cart is empty"
             });
+        }
+
+        let coupon = null;
+        if (couponCode) {
+            coupon = await prisma.coupon.findUnique({
+                where: { code: couponCode.toUpperCase().trim() }
+            });
+
+            let preSubtotal = 0;
+
+            for (const item of cart.items) {
+                const price = item.variant
+                    ? parseFloat(item.variant.price)
+                    : parseFloat(item.product.price);
+                preSubtotal += price * item.quantity;
+            }
+
+            const validation = validateCouponData(coupon, preSubtotal);
+            if (!validation.valid) {
+                return res.status(400).json({
+                    success: false,
+                    message: validation.message
+                });
+            }
         }
 
         const order = await prisma.$transaction(async (tx) => {
@@ -86,13 +111,26 @@ export const createOrder = async (req, res, next) => {
                 }
             }
 
-            const total = subtotal;
+            let discount = 0;
+            let appliedCouponCode = null;
+            if (coupon) {
+                discount = calculateDiscount(coupon, subtotal);
+                appliedCouponCode = coupon.code;
+
+                await tx.coupon.update({
+                    where: { id: coupon.id },
+                    data: { usedCount: { increment: 1 } }
+                });
+            }
+
+            const total = subtotal - discount;
 
             const newOrder = await tx.order.create({
                 data: {
                     userId,
                     shippingAddressId: parseInt(shippingAddressId),
-                    subtotal, tax: 0, shippingCost: 0, total,
+                    subtotal, discount, tax: 0, shippingCost: 0, total,
+                    couponCode: appliedCouponCode,
                     paymentMethod,
                     items: { create: orderItems }
                 }
