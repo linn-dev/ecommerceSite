@@ -44,6 +44,9 @@ export default function Footer() {
                             <li>
                                 <Link to="/products?category=shirts" className="hover:text-blue-400 transition-colors">Clothing & Apparel</Link>
                             </li>
+                            <li>
+                                <Link to="/coupons" className="hover:text-blue-400 transition-colors">Coupons & Deals</Link>
+                            </li>
                         </ul>
                     </div>
 
