@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/cartContext';
 import { useAddresses, useCreateAddress } from '../../hooks/queries/useAddressMutation';
 import { useCreateOrder } from '../../hooks/queries/useOrderMutation';
+import { useValidateCoupon } from '../../hooks/queries/useCouponMutation';
 import GlassCard from '../../components/glasses/GlassCard';
 import GlassButton from '../../components/glasses/GlassButton';
 
@@ -20,9 +21,13 @@ export default function CheckoutPage() {
     const { data: addressData, isLoading: addressLoading } = useAddresses();
     const { mutate: createAddress, isPending: isCreatingAddress } = useCreateAddress();
     const { mutate: placeOrder, isPending: isPlacingOrder } = useCreateOrder();
+    const { mutate: validateCouponMutation, isPending: isValidatingCoupon } = useValidateCoupon();
     const [selectedAddressId, setSelectedAddressId] = useState(null);
     const [paymentMethod, setPaymentMethod] = useState('COD');
     const [showAddressForm, setShowAddressForm] = useState(false);
+    const [couponCode, setCouponCode] = useState('');
+    const [appliedCoupon, setAppliedCoupon] = useState(null);
+    const [couponError, setCouponError] = useState('');
     const [addressForm, setAddressForm] = useState({
         fullName: '',
         phone: '',
@@ -85,6 +90,32 @@ export default function CheckoutPage() {
         });
     };
 
+    const handleApplyCoupon = () => {
+        if (!couponCode.trim()) return;
+        setCouponError('');
+        validateCouponMutation(
+            { code: couponCode.trim(), subtotal: cartTotal },
+            {
+                onSuccess: (data) => {
+                    setAppliedCoupon(data.data);
+                    setCouponCode('');
+                },
+                onError: (error) => {
+                    setCouponError(error.response?.data?.message || 'Invalid coupon');
+                    setAppliedCoupon(null);
+                }
+            }
+        );
+    };
+
+    const handleRemoveCoupon = () => {
+        setAppliedCoupon(null);
+        setCouponCode('');
+        setCouponError('');
+    };
+
+    const finalTotal = appliedCoupon ? appliedCoupon.newTotal : cartTotal;
+
     const handlePlaceOrder = () => {
         if (!selectedAddressId) {
             alert('Please select a shipping address');
@@ -93,7 +124,8 @@ export default function CheckoutPage() {
         placeOrder(
             {
                 shippingAddressId: selectedAddressId,
-                paymentMethod
+                paymentMethod,
+                ...(appliedCoupon && { couponCode: appliedCoupon.code })
             },
             {
                 onSuccess: (data) => {
@@ -285,6 +317,57 @@ export default function CheckoutPage() {
                             </form>
                         )}
                     </GlassCard>
+                    {/* Coupon Code Section */}
+                    <GlassCard>
+                        <h2 className="text-xl font-bold mb-4">
+                            <i className="fa-solid fa-ticket me-2"></i>
+                            Coupon Code
+                        </h2>
+                        {appliedCoupon ? (
+                            <div className="flex items-center justify-between p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
+                                <div>
+                                    <p className="text-green-400 font-semibold">
+                                        <i className="fa-solid fa-check-circle me-1"></i>
+                                        {appliedCoupon.code} applied
+                                    </p>
+                                    <p className="text-sm text-green-300 mt-1">
+                                        {appliedCoupon.description || `You save ${appliedCoupon.discountAmount.toLocaleString()} MMK`}
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={handleRemoveCoupon}
+                                    className="text-red-400 hover:text-red-300 text-sm font-medium"
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="text"
+                                        value={couponCode}
+                                        onChange={(e) => { setCouponCode(e.target.value); setCouponError(''); }}
+                                        placeholder="Enter coupon code"
+                                        className="flex-1 p-2 bg-white/5 border border-gray-600 rounded focus:outline-none focus:border-slate-200 uppercase"
+                                    />
+                                    <GlassButton
+                                        onClick={handleApplyCoupon}
+                                        disabled={isValidatingCoupon || !couponCode.trim()}
+                                        className="px-4 py-2"
+                                    >
+                                        {isValidatingCoupon ? 'Checking...' : 'Apply'}
+                                    </GlassButton>
+                                </div>
+                                {couponError && (
+                                    <p className="text-red-400 text-sm mt-2">
+                                        <i className="fa-solid fa-circle-exclamation me-1"></i>
+                                        {couponError}
+                                    </p>
+                                )}
+                            </>
+                        )}
+                    </GlassCard>
                     {/* Payment Method Section */}
                     <GlassCard>
                         <h2 className="text-xl font-bold mb-4">
@@ -361,6 +444,16 @@ export default function CheckoutPage() {
                                 <span className="text-gray-400">Subtotal</span>
                                 <span>{cartTotal.toLocaleString()} MMK</span>
                             </div>
+                            {appliedCoupon && (
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-green-400">
+                                        Discount ({appliedCoupon.code})
+                                    </span>
+                                    <span className="text-green-400">
+                                        -{appliedCoupon.discountAmount.toLocaleString()} MMK
+                                    </span>
+                                </div>
+                            )}
                             <div className="flex justify-between text-sm">
                                 <span className="text-gray-400">Shipping</span>
                                 <span className="text-green-400">Free</span>
@@ -371,7 +464,7 @@ export default function CheckoutPage() {
                             </div>
                             <div className="border-t border-gray-600 pt-3 flex justify-between font-bold text-lg">
                                 <span>Total</span>
-                                <span>{cartTotal.toLocaleString()} MMK</span>
+                                <span>{finalTotal.toLocaleString()} MMK</span>
                             </div>
                         </div>
                         {/* Place Order Button */}
