@@ -58,6 +58,18 @@ export default function AdminProductsPage() {
                         <i className="fa-solid fa-chevron-right text-gray-400 group-hover:text-white transition-colors"></i>
                     </Link>
                 </GlassCard>
+                <GlassCard className="flex-1 w-full">
+                    <Link to="/admin/coupons" className="flex items-center justify-between group">
+                        <div className="flex items-center gap-3">
+                            <i className="fa-solid fa-ticket text-xl text-blue-400"></i>
+                            <div>
+                                <h2 className="text-lg font-bold">Coupon Management</h2>
+                                <p className="text-sm text-gray-400">Create and manage discount coupons</p>
+                            </div>
+                        </div>
+                        <i className="fa-solid fa-chevron-right text-gray-400 group-hover:text-white transition-colors"></i>
+                    </Link>
+                </GlassCard>
             </div>
 
             <GlassCard className="mt-4 p-0! overflow-x-auto">
