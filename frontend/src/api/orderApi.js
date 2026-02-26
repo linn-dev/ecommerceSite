@@ -1,9 +1,10 @@
 import axiosInstance from "./axiosInstance.js"
 
-export const createOrder = async({ shippingAddressId, paymentMethod }) => {
+export const createOrder = async({ shippingAddressId, paymentMethod, couponCode }) => {
     const response = await axiosInstance.post("/orders", {
         shippingAddressId,
-        paymentMethod
+        paymentMethod,
+        ...(couponCode && { couponCode })
     });
     return response.data;
 }
